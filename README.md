@@ -4,130 +4,86 @@ Adapters for Large Language Models and Generative Pre-trained Transformers APIs
 
 ## Installation
 
+### Using pip
+
 ```bash
-$ poetry install
+python -m pip install aigents
 ```
 
 ## Usage
 
+The `aigents` package intention is to tackle the issue of out there having a wide variety of different AI models APIs, even though most of them keep similar standards, it might be confusing or challeging for developers to merge, scale and write conssitent solutions that englobes them.
+
+### Chat
+
+The main classes for completions or chat have _Chatters_ on their name. For instance, `aigents.GoogleChatter` uses Google's AI completion models to generate chat responses. The method for calling responses is `answer`.
+
+The constructors for _Chatters_ differs a little, but on thing in common on them is the `setup` (`str`) argument: a text instructing the AI model to play some role. For example:
+
+``` python
+from aigents import GoogleChatter
+
+setup = "You are a very experienced and successful fantasy novel writer. "
+## generate your API key: https://makersuite.google.com/app/apikey
+api_key = "YOUR_GOOGLE_AI_API_KEY"
+temperature = 0.5  # for creativity
+chatter = GoogleChatter(setup=setup, api_key=api_key)
+
+response = chatter.answer(
+    "What are the difference between soft magic system "
+    "and hard magic system?"
+)
+```
+
+The returned value is a string corresponding on the first [candidate response from Gemini API](https://ai.google.dev/api/python/google/generativeai/GenerativeModel#generate_content), which you can access using the attribute `chatter.last_response`.
+
+#### Conversation
+
+By default, `chatter.answer` has `conversation=True` for every _Chatter_. This means that the object keeps a record of the messages (conversation), which you can access using the attribute `chatter.messages`.
+
+If the messages exceeds the token window allowed for the corresponding model, the instance will try to reduce the size of the messages. If the default values of `use_agent=True` is set for `chatter.answer`, the _Chatter_  will use another instance to summarize messages, in order to preserve most of the history and meaning of the conversation. Otherwise it will remove the oldest (but the `chatter.setup`, if provided) messages.
+
 This section provides a brief overview of the classes in `core.py` and their usage.
 
-### OpenAIChatter
+#### Async version:
 
-The `OpenAIChatter` class is a synchronous chatbot that uses OpenAI's GPT-3 model to generate responses to prompts by default.
+Every chatter have an async version. For instance, the previous code can be written using async version of the OpenAI's chatter:
 
-```python
-# Initialize the chatbot
-chatbot = OpenAIChatter(
-    setup="You are a very skilled writer.",
-    api_key="your_openai_api_key",
-    temperature=0.8,
-    model="gpt-3"
+``` python
+from aigents import AsyncOpenAIChatter
+
+setup = "You are a very experienced and successful fantasy novel writer. "
+## generate your API key: https://platform.openai.com/api-keys
+api_key = "YOUR_OPEN_AI_API_KEY"
+temperature = 0.5  # for creativity
+chatter = AsyncOpenAIChatter(setup=setup, api_key=api_key)
+
+response = await chatter.answer(
+    "What are the difference between soft magic system "
+    "and hard magic system?"
 )
-
-# Generate a response to a prompt
-response = chatbot.answer("Hello, how are you?")
-print(response)
 ```
 
-Optionally you can switch the model:
-```python
-chatbot.change_model('gtp4-turbo-preview')
-```
+#### Other Chatters:
 
+* **AsyncGoogleChatter**: async version of `GoogleChatter`;
+* **OpenAIChatter**: chatter that uses OpenAI's API;
+* **BingChatter**: uses the uses [g4f](https://github.com/xtekky/gpt4free/tree/main) adpter, with `Bing` provider;
+* **AsyncBingChatter**: async version of `BingChatter`.
 
-## AsyncOpenAIChatter
+#### Models
 
-The `AsyncOpenAIChatter` class is an asynchronous version of `OpenAIChatter`. It works similarly to `OpenAIChatter`, but its `answer` method is a coroutine that must be awaited.
-
-### Usage
-
-```python
-# Initialize the chatbot
-chatbot = AsyncOpenAIChatter(
-    setup="You are a very skilled writer.",
-    api_key="your_openai_api_key",
-    temperature=0.8,
-    model="gpt-3"
-)
-
-# Generate a response to a prompt
-response = await chatbot.answer("Hello, how are you?")
-print(response)
-```
-
-## GoogleChatter
-
-The `GoogleChatter` class is a synchronous chatbot that uses Google's Generative AI model to generate responses to prompts.
-
-### Usage
+You can check different AI models used by `aigents` in module `constants`. For instance, for changing OpenAI chatter's model from `gpt-3.5-turbo-0125` to `gpt-4-0125-preview`:
 
 ```python
-# Initialize the chatbot
-chatbot = GoogleChatter(
-    setup="You are a very skilled writer.",
-    api_key="your_google_ai_api_key",
-    temperature=0.8
-)
+from aigents import OpenAIChatter
+from aigents.constants import MODELS
 
-# Generate a response to a prompt
-response = chatbot.answer("Hello, how are you?")
-print(response)
-```
-
-## AsyncGoogleChatter
-
-The `AsyncGoogleChatter` class is an asynchronous version of `GoogleChatter`. It works similarly to `GoogleChatter`, but its `answer` method is a coroutine that must be awaited.
-
-### Usage
-
-```python
-# Initialize the chatbot
-chatbot = AsyncGoogleChatter(
-    setup="You are a very skilled writer.",
-    api_key="your_google_ai_api_key",
-    temperature=0.8
-)
-
-# Generate a response to a prompt
-response = await chatbot.answer("Hello, how are you?")
-print(response)
-```
-
-## BingChatter
-
-The `BingChatter` class is a synchronous chatbot that uses Bing's chat completions provider to generate responses to prompts. This class uses [g4f](https://github.com/xtekky/gpt4free/tree/main) adpter.
-
-### Usage
-
-```python
-# Initialize the chatbot
-chatbot = BingChatter(
-    setup="You are a very skilled writer.",
-    api_key="your_bing_api_key"
-)
-
-# Generate a response to a prompt
-response = chatbot.answer("Hello, how are you?")
-print(response)
-```
-
-## AsyncBingChatter
-
-The `AsyncBingChatter` class is an asynchronous version of `BingChatter`. It works similarly to `BingChatter`, but its `answer` method is a coroutine that must be awaited.
-
-### Usage
-
-```python
-# Initialize the chatbot
-chatbot = AsyncBingChatter(
-    setup="You are a very skilled writer.",
-    api_key="your_bing_api_key"
-)
-
-# Generate a response to a prompt
-response = await chatbot.answer("Hello, how are you?")
-print(response)
+api_key = "YOUR_OPEN_AI_API_KEY"
+chatter = OpenAIChatter(setup=setup, api_key=api_key)
+chatter.change_model(MODELS[3])
+# always checked if it is the intended model
+print(chatter.model)
 ```
 
 ## Contributing

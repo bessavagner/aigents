@@ -326,7 +326,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
         response = self.client.generate_content(
             messages, generation_config=config
         )
-
+        self.last_response = response
         try:
             self._update(
                 ROLES[-1],

@@ -1,0 +1,34 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+z_*.ipynb
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+.cache
+*.cover
+.pytest_cache/
+
+# data
+*.parquet
+*.npy
+*.txt

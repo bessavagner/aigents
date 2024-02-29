@@ -37,6 +37,8 @@ response = chatter.answer(
 
 The returned value is a string corresponding on the first [candidate response from Gemini API](https://ai.google.dev/api/python/google/generativeai/GenerativeModel#generate_content), which you can access using the attribute `chatter.last_response`.
 
+For `OpenAI` and `Google` chatters you can the the API key using `.env` file. Use the `.sample.env`: paste your API keys and save it as `.env`
+
 #### Conversation
 
 By default, `chatter.answer` has `conversation=True` for every _Chatter_. This means that the object keeps a record of the messages (conversation), which you can access using the attribute `chatter.messages`.

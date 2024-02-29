@@ -8,124 +8,127 @@ Adapters for Large Language Models and Generative Pre-trained Transformers APIs
 $ poetry install
 ```
 
-## Usage - Classes
+## Usage
+
+This section provides a brief overview of the classes in `core.py` and their usage.
 
 ### OpenAIChatter
 
-The `OpenAIChatter` class is a synchronous OpenAI-based chatbot. It inherits from the `OpenAIChatterMixin` and `BaseChatter` classes.
-
-**Constructor:**
+The `OpenAIChatter` class is a synchronous chatbot that uses OpenAI's GPT-3 model to generate responses to prompts by default.
 
 ```python
-def __init__(self,
-             *args,
-             setup: str = None,
-             api_key: str = None,
-             organization: str = None,
-             temperature: float = 0.0,
-             model: str = MODELS[0],
-             **kwargs):
+# Initialize the chatbot
+chatbot = OpenAIChatter(
+    setup="You are a very skilled writer.",
+    api_key="your_openai_api_key",
+    temperature=0.8,
+    model="gpt-3"
+)
+
+# Generate a response to a prompt
+response = chatbot.answer("Hello, how are you?")
+print(response)
 ```
 
-**Parameters:**
+Optionally you can switch the model:
+```python
+chatbot.change_model('gtp4-turbo-preview')
+```
 
-* `*args`: Arguments for the `__configure` method.
-* `setup`: Text for setting up a model's or assistant's role.
-* `api_key`: OpenAI API key for authentication.
-* `organization`: Unique identifier for your organization.
-* `temperature`: The sampling temperature, between 0 and 1.
-* `model`: Model string identification.
-* `**kwargs`: Keyword arguments for the `__configure` method.
 
-**Methods:**
+## AsyncOpenAIChatter
 
-* `answer`: Generate a response to the given prompt.
+The `AsyncOpenAIChatter` class is an asynchronous version of `OpenAIChatter`. It works similarly to `OpenAIChatter`, but its `answer` method is a coroutine that must be awaited.
 
-### AsyncOpenAIChatter
-
-The `AsyncOpenAIChatter` class is an asynchronous OpenAI-based chatbot. It inherits from the `OpenAIChatterMixin` and `BaseChatter` classes.
-
-**Constructor:**
+### Usage
 
 ```python
-def __init__(self,
-             *args,
-             setup: str = None,
-             api_key: str = None,
-             organization: str = None,
-             temperature: float = 0.0,
-             model: str = MODELS[0],
-             **kwargs):
+# Initialize the chatbot
+chatbot = AsyncOpenAIChatter(
+    setup="You are a very skilled writer.",
+    api_key="your_openai_api_key",
+    temperature=0.8,
+    model="gpt-3"
+)
+
+# Generate a response to a prompt
+response = await chatbot.answer("Hello, how are you?")
+print(response)
 ```
 
-**Parameters:**
+## GoogleChatter
 
-* `*args`: Arguments for the `__configure` method.
-* `setup`: Text for setting up a model's or assistant's role.
-* `api_key`: OpenAI API key for authentication.
-* `organization`: Unique identifier for your organization.
-* `temperature`: The sampling temperature, between 0 and 1.
-* `model`: Model string identification.
-* `**kwargs`: Keyword arguments for the `__configure` method.
+The `GoogleChatter` class is a synchronous chatbot that uses Google's Generative AI model to generate responses to prompts.
 
-**Methods:**
-
-* `answer`: Generate a response to the given prompt.
-
-### GoogleChatter
-
-The `GoogleChatter` class is a synchronous Google-based chatbot. It inherits from the `GoogleChatterMixin` and `BaseChatter` classes.
-
-**Constructor:**
+### Usage
 
 ```python
-def __init__(self,
-             *args,
-             setup: str = None,
-             api_key: str = None,
-             temperature: float = 0.0,
-             **kwargs):
+# Initialize the chatbot
+chatbot = GoogleChatter(
+    setup="You are a very skilled writer.",
+    api_key="your_google_ai_api_key",
+    temperature=0.8
+)
+
+# Generate a response to a prompt
+response = chatbot.answer("Hello, how are you?")
+print(response)
 ```
 
-**Parameters:**
+## AsyncGoogleChatter
 
-* `*args`: Arguments for the `__configure` method.
-* `setup`: Text for setting up a model's or assistant's role.
-* `api_key`: Google AI API key for authentication.
-* `temperature`: The sampling temperature, between 0 and 1.
-* `**kwargs`: Keyword arguments for the `__configure` method.
+The `AsyncGoogleChatter` class is an asynchronous version of `GoogleChatter`. It works similarly to `GoogleChatter`, but its `answer` method is a coroutine that must be awaited.
 
-**Methods:**
-
-* `answer`: Generate a response to the given prompt.
-
-### AsyncGoogleChatter
-
-The `AsyncGoogleChatter` class is an asynchronous Google-based chatbot. It inherits from the `GoogleChatter` class.
-
-**Constructor:**
+### Usage
 
 ```python
-def __init__(self,
-             *args,
-             setup: str = None,
-             api_key: str = None,
-             temperature: float = 0.0,
-             **kwargs):
+# Initialize the chatbot
+chatbot = AsyncGoogleChatter(
+    setup="You are a very skilled writer.",
+    api_key="your_google_ai_api_key",
+    temperature=0.8
+)
+
+# Generate a response to a prompt
+response = await chatbot.answer("Hello, how are you?")
+print(response)
 ```
 
-**Parameters:**
+## BingChatter
 
-* `*args`: Arguments for the `__configure` method.
-* `setup`: Text for setting up a model's or assistant's role.
-* `api_key`: Google AI API key for authentication.
-* `temperature`: The sampling temperature, between 0 and 1.
-* `**kwargs`: Keyword arguments for the `__configure` method.
+The `BingChatter` class is a synchronous chatbot that uses Bing's chat completions provider to generate responses to prompts. This class uses [g4f](https://github.com/xtekky/gpt4free/tree/main) adpter.
 
-**Methods:**
+### Usage
 
-* `answer`: Generate a response to the given prompt.
+```python
+# Initialize the chatbot
+chatbot = BingChatter(
+    setup="You are a very skilled writer.",
+    api_key="your_bing_api_key"
+)
 
+# Generate a response to a prompt
+response = chatbot.answer("Hello, how are you?")
+print(response)
+```
+
+## AsyncBingChatter
+
+The `AsyncBingChatter` class is an asynchronous version of `BingChatter`. It works similarly to `BingChatter`, but its `answer` method is a coroutine that must be awaited.
+
+### Usage
+
+```python
+# Initialize the chatbot
+chatbot = AsyncBingChatter(
+    setup="You are a very skilled writer.",
+    api_key="your_bing_api_key"
+)
+
+# Generate a response to a prompt
+response = await chatbot.answer("Hello, how are you?")
+print(response)
+```
 
 ## Contributing
 

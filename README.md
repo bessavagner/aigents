@@ -94,7 +94,7 @@ Interested in contributing? Check out the contributing guidelines. Please note t
 
 ## License
 
-`aigents` was created by Vagner Bessa. Vagner Bessa retains all rights to the source and it may not be reproduced, distributed, or used to create derivative works.
+This project is licensed under [GNU_GPL_v3.0](https://github.com/xtekky/gpt4free/blob/main/LICENSE)
 
 ## Credits
 

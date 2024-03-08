@@ -16,7 +16,6 @@ import google.generativeai as genai
 
 from g4f.client import Client as ClientG4F
 from g4f.Provider import Bing
-from g4f.Provider.Bing import Tones
 # ----
 
 from .constants import MODELS, MAX_TOKENS, ROLES

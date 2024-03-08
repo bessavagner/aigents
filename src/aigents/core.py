@@ -106,7 +106,7 @@ class OpenAIChatter(OpenAIChatterMixin, BaseChatter):
                 organization=self.organization
             )
             agent.max_tokens = self.max_tokens // 4  # Limit summary length
-        if asyncio.iscoroutinefunction(agent.answer):
+        if agent and asyncio.iscoroutinefunction(agent.answer):
             raise AgentError('Summarizer agent must be synchronous')
         self._update(
             role=ROLES[1], content=prompt, use_agent=use_agent, agent=agent
@@ -223,7 +223,7 @@ class AsyncOpenAIChatter(OpenAIChatterMixin, BaseChatter):
                 organization=self.organization
             )
             agent.max_tokens = self.max_tokens // 4  # Limit summary length
-        if asyncio.iscoroutinefunction(agent.answer):
+        if agent and asyncio.iscoroutinefunction(agent.answer):
             raise AgentError('Summarizer agent must be synchronous')
         self._update(
             role=ROLES[1], content=prompt, use_agent=use_agent, agent=agent
@@ -527,7 +527,7 @@ class BingChatter(BingChatterMixin, BaseChatter):
                 api_key=self.api_key,
             )
             agent.max_tokens = self.max_tokens // 4  # Limit summary length
-        if asyncio.iscoroutinefunction(agent.answer):
+        if agent and asyncio.iscoroutinefunction(agent.answer):
             raise AgentError('Summarizer agent must be synchronous')
         self._update(
             role=ROLES[1], content=prompt, use_agent=use_agent, agent=agent
@@ -648,7 +648,7 @@ class AsyncBingChatter(BingChatterMixin, BaseChatter):
                 api_key=self.api_key,
             )
             agent.max_tokens = self.max_tokens // 4  # Limit summary length
-        if asyncio.iscoroutinefunction(agent.answer):
+        if agent and asyncio.iscoroutinefunction(agent.answer):
             raise AgentError('Summarizer agent must be synchronous')
         self._update(
             role=ROLES[1], content=prompt, use_agent=use_agent, agent=agent

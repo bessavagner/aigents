@@ -479,3 +479,68 @@ Detailed Instructions:
 Remember, your goal is to create content that not only informs but also inspires and engages. Happy designing!
 """
 )
+
+IMPROVE_PROMPT_V2 = """**Prompt Improvement Prompt**
+
+The following prompt aims to refine and improve an existing prompt designed to enhance the performance of large language models like GPT-4. The original prompt outlines strategies and tactics for optimizing model outputs and provides specific examples to illustrate each approach. The prompt is structured into sections based on different strategies and tactics, each accompanied by detailed explanations and examples.
+
+---
+
+**Prompt Enhancement Guide**
+
+This guide is designed to refine and optimize prompts for large language models, such as GPT-4, to enhance their performance. By implementing the strategies and tactics outlined here, users can improve the quality and relevance of model outputs across various tasks. It's recommended to experiment with different methods to determine the most effective approach for your specific needs.
+
+**Key Strategies for Improvement**
+
+1. **Clarity in Instructions:**
+   - Clearly specify instructions to minimize ambiguity and improve relevance.
+   - Provide context, details, and examples to guide the model effectively.
+
+2. **Utilize Reference Text:**
+   - Instruct the model to incorporate information from reference texts for more accurate responses.
+   - Encourage citation-based answers to ensure reliability and authenticity.
+
+3. **Decompose Complex Tasks:**
+   - Break down complex tasks into simpler subtasks for better model comprehension and accuracy.
+   - Utilize intent classification and dialogue summarization to handle intricate queries effectively.
+
+4. **Facilitate Reasoning:**
+   - Allow the model time to reason and deliberate before producing responses.
+   - Implement inner monologue or sequence-based queries to hide reasoning processes where necessary.
+
+5. **Leverage External Tools:**
+   - Integrate external tools like code execution engines or knowledge retrieval systems to complement model capabilities.
+   - Provide access to specific functions or APIs to enhance task performance.
+
+6. **Systematic Evaluation:**
+   - Test prompt modifications systematically to assess performance changes accurately.
+   - Utilize automated evaluations and model-based assessments for comprehensive analysis.
+
+**Tactics for Enhanced Prompts**
+
+- **Clear Instructions:**
+  - Provide specific details and context in queries for more relevant outputs.
+  - Use personas and delimiters to enhance clarity and effectiveness.
+
+- **Reference Text Integration:**
+  - Instruct the model to utilize reference texts and incorporate citations into responses.
+  - Implement embeddings-based search for efficient knowledge retrieval.
+
+- **Task Decomposition:**
+  - Employ intent classification to identify relevant instructions for user queries.
+  - Summarize dialogue and documents iteratively to handle extensive inputs effectively.
+
+- **Reasoning Facilitation:**
+  - Instruct the model to deliberate and work out solutions before providing answers.
+  - Use inner monologue or sequence-based queries to hide reasoning processes from users.
+
+- **External Tools Utilization:**
+  - Leverage code execution engines and APIs for accurate calculations and data retrieval.
+  - Grant model access to specific functions for enhanced task performance.
+
+- **Evaluation and Optimization:**
+  - Systematically evaluate prompt changes using diverse test cases and automated evaluations.
+  - Assess model outputs against gold-standard answers for comprehensive performance analysis.
+
+**Conclusion:**
+By implementing these strategies and tactics, users can refine and optimize prompts to enhance the performance of large language models like GPT-4 across various tasks and domains. Experimentation and systematic evaluation are crucial for determining the most effective approaches for specific use cases."""

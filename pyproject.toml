@@ -21,6 +21,7 @@ tiktoken = "^0.6.0"
 python-dotenv = "^1.0.1"
 google-generativeai = "^0.3.2"
 g4f = {extras = ["all"], version = "^0.2.2.3"}
+tomlkit = "^0.12.4"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.22.1"

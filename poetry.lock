@@ -920,13 +920,13 @@ files = [
 
 [[package]]
 name = "g4f"
-version = "0.2.2.3"
+version = "0.2.2.6"
 description = "The official gpt4free repository | various collection of powerful language models"
 optional = false
 python-versions = "*"
 files = [
-    {file = "g4f-0.2.2.3-py3-none-any.whl", hash = "sha256:bc1608f21eb820fcdf547f35b64fc19bceeb399866bcb04aa389fdbfddbd88a2"},
-    {file = "g4f-0.2.2.3.tar.gz", hash = "sha256:ba8594cb812a2e299f9088904e6bb2e299cfbb765f967dc28dca3543e204cfca"},
+    {file = "g4f-0.2.2.6-py3-none-any.whl", hash = "sha256:f7c4d922f0715c3c9ba61a0e3ed431ce0274419abaec1537e8529f8b71c77e94"},
+    {file = "g4f-0.2.2.6.tar.gz", hash = "sha256:3c4336d7b2c3df340f269119b011b72cc06a7dc7c83f7293542cda6e94050994"},
 ]
 
 [package.dependencies]
@@ -2900,13 +2900,13 @@ test = ["flake8", "isort", "pytest"]
 
 [[package]]
 name = "tomlkit"
-version = "0.12.3"
+version = "0.12.4"
 description = "Style preserving TOML library"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "tomlkit-0.12.3-py3-none-any.whl", hash = "sha256:b0a645a9156dc7cb5d3a1f0d4bab66db287fcb8e0430bdd4664a095ea16414ba"},
-    {file = "tomlkit-0.12.3.tar.gz", hash = "sha256:75baf5012d06501f07bee5bf8e801b9f343e7aac5a92581f20f80ce632e6b5a4"},
+    {file = "tomlkit-0.12.4-py3-none-any.whl", hash = "sha256:5cd82d48a3dd89dee1f9d64420aa20ae65cfbd00668d6f094d7578a78efbb77b"},
+    {file = "tomlkit-0.12.4.tar.gz", hash = "sha256:7ca1cfc12232806517a8515047ba66a19369e71edf2439d0f5824f91032b6cc3"},
 ]
 
 [[package]]
@@ -3319,4 +3319,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c96321e36e55e3114fd5901d8106efc9e07c250d53cb97de7bb6c42f51151f99"
+content-hash = "488f48341cc07a905a978cf54322cfc444a57f81165c9c2d6a72a2a59622bf10"

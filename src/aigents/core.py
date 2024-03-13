@@ -1,9 +1,11 @@
 import os
 import logging
 import asyncio
+from pathlib import Path
 from typing import Union
 
 from dotenv import load_dotenv
+from PIL import Image
 
 import google.generativeai as genai
 from g4f.Provider.Bing import Tones
@@ -438,6 +440,190 @@ class AsyncGoogleChatter(GoogleChatter):
             return text
 
 
+class GoogleVision(GoogleChatterMixin, BaseChatter):
+    def __init__(self,
+                 *args,
+                 setup: str = None,
+                 api_key: str = None,
+                 temperature: float = 0.0,
+                 **kwargs):
+        """
+        Initialize a Google based Chatter instance.
+
+        Parameters
+        ----------
+        *args:
+            Arguments for the __configure method.
+        setup : str, optional
+            Text for setting up a model's or assistant's role.
+
+            This text should be a clear statement of how the model should
+            respond the user's queries. Try to make it so that the model or
+            assistant get rid of any coercion or user's attempt to diverge from
+            the purpose and intention of the designed agent.
+        api_key : str
+            Google AI API key for authentication (see
+            https://makersuite.google.com/app/apikey)
+        temperature: float
+            The sampling temperature, between 0 and 1.
+            Higher values like 0.8 will make the output more random,
+            while lower values like 0.2 will make it more focused and
+            deterministic.
+        **kwargs:
+            Keyword arguments for the __configure method.
+        Returns
+        -------
+        None
+        """
+        super().__init__(*args,
+                         setup=setup,
+                         api_key=api_key,
+                         temperature=temperature,
+                         model=MODELS[7],
+                         **kwargs)
+
+    def answer(self,
+               img: Union[str, Path, Image.Image],
+               prompt: str = None,
+               **kwargs):
+        """
+        Generate a response based on the given image and optional prompt.
+
+        Parameters
+        ----------
+        img : str, Image.Image or Path
+            The image to analyze. Can be a file path as a string or an Image.Image object.
+        prompt : str, optional
+            An optional prompt to guide the response. Default is None.
+        **kwargs : dict, optional
+            Additional keyword arguments for the method.
+
+        Returns
+        -------
+        str
+            The generated response content based on the image and prompt.
+
+        Examples
+        --------
+        >>> vision = GoogleVision(api_key='your_api_key')
+        >>> response = vision.answer('path/to/image.jpg', 'Describe the image.')
+        >>> print(response)
+        'The image shows a beautiful landscape with mountains and a river.'
+
+        Notes
+        -----
+        This method generates a response based on the provided image and optional prompt.
+        """
+        # TODO: add messages system
+        if isinstance(img, (str, Path)):
+            img = Image.open(img)
+        message = img
+        if prompt:
+            message = [prompt, img]
+        response = self.client.generate_content(
+            message
+        )
+        try:
+            return response.text
+        except ValueError:
+            text = '\n'.join(
+                [part.text for part in response.candidates[0].content.parts]
+            )
+            return text
+
+
+class AsyncGoogleVision(GoogleChatterMixin, BaseChatter):
+    def __init__(self,
+                 *args,
+                 setup: str = None,
+                 api_key: str = None,
+                 temperature: float = 0.0,
+                 **kwargs):
+        """
+        Initialize a Google based Chatter instance.
+
+        Parameters
+        ----------
+        *args:
+            Arguments for the __configure method.
+        setup : str, optional
+            Text for setting up a model's or assistant's role.
+
+            This text should be a clear statement of how the model should
+            respond the user's queries. Try to make it so that the model or
+            assistant get rid of any coercion or user's attempt to diverge from
+            the purpose and intention of the designed agent.
+        api_key : str
+            Google AI API key for authentication (see
+            https://makersuite.google.com/app/apikey)
+        temperature: float
+            The sampling temperature, between 0 and 1.
+            Higher values like 0.8 will make the output more random,
+            while lower values like 0.2 will make it more focused and
+            deterministic.
+        **kwargs:
+            Keyword arguments for the __configure method.
+        Returns
+        -------
+        None
+        """
+        super().__init__(*args,
+                         setup=setup,
+                         api_key=api_key,
+                         temperature=temperature,
+                         model=MODELS[7],
+                         **kwargs)
+
+    async def answer(self,
+                     img: Union[str, Path, Image.Image],
+                     prompt: str = None,
+                     **kwargs):
+        """
+        Generate a response based on the given image and optional prompt.
+
+        Parameters
+        ----------
+        img : str, Image.Image or Path
+            The image to analyze. Can be a file path as a string or an Image.Image object.
+        prompt : str, optional
+            An optional prompt to guide the response. Default is None.
+        **kwargs : dict, optional
+            Additional keyword arguments for the method.
+
+        Returns
+        -------
+        str
+            The generated response content based on the image and prompt.
+
+        Examples
+        --------
+        >>> vision = AsyncGoogleVision(api_key='your_api_key')
+        >>> response = await vision.answer('path/to/image.jpg', 'Describe the image.')
+        >>> print(response)
+        'The image shows a beautiful landscape with mountains and a river.'
+
+        Notes
+        -----
+        This method generates a response based on the provided image and optional prompt.
+        """
+        # TODO: add messages system
+        if isinstance(img, (str, Path)):
+            img = Image.open(img)
+        message = img
+        if prompt:
+            message = [prompt, img]
+        response = await self.client.generate_content_async(
+            message
+        )
+        try:
+            return response.text
+        except ValueError:
+            text = '\n'.join(
+                [part.text for part in response.candidates[0].content.parts]
+            )
+            return text
+
+
 class BingChatter(BingChatterMixin, BaseChatter):
     def __init__(self,
                  *args,
@@ -611,13 +797,13 @@ class AsyncBingChatter(BingChatterMixin, BaseChatter):
                          organization=None,
                          **kwargs)
     async def answer(self,
-               prompt,
-               use_agent=True,
-               conversation=True,
-               agent=None,
-               tone: str = Tones.precise,
-               web_search: bool = False,
-               **kwargs):
+                     prompt,
+                     use_agent=True,
+                     conversation=True,
+                     agent=None,
+                     tone: str = Tones.precise,
+                     web_search: bool = False,
+                     **kwargs):
         """
         Generate a response to the given prompt.
 

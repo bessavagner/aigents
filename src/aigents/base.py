@@ -13,6 +13,7 @@ from openai import OpenAI
 from openai import AsyncOpenAI
 
 import google.generativeai as genai
+from google.generativeai.types.content_types import ContentType
 
 from g4f.client import Client as ClientG4F
 from g4f.Provider import Bing
@@ -390,8 +391,8 @@ class GoogleChatterMixin:
                    **kwargs):
         if self.model is None:
             self.model = MODELS[6]
-        if self.model not in (MODELS[6], ):
-            raise AgentError(f"Google models are: {', '.join((MODELS[6], ))}")
+        if self.model not in MODELS[6:]:
+            raise AgentError(f"Google models are: {', '.join(MODELS[6:])}")
         self.max_tokens = dict(MAX_TOKENS)[self.model]
         self.__load_credentials(api_key=api_key)
         
@@ -428,7 +429,7 @@ class GoogleChatterMixin:
         genai.configure(api_key=self.api_key)
         return genai.GenerativeModel(model_name=self.model, **kwargs)
 
-    def _update(self, role: str, content: str, use_agent=True, agent=None):
+    def _update(self, role: str, content: ContentType, use_agent=True, agent=None):
 
         """
         Update the conversation with a new message.
@@ -441,8 +442,9 @@ class GoogleChatterMixin:
         if role not in [ROLES[1], ROLES[-1]]:
             raise KeyError(f"`role` must be {ROLES[1]} or {ROLES[-1]}")
 
-        if not isinstance(content, str):
-            raise TypeError('`content` must be a string')
+        # TODO: handle content type check
+        # if not isinstance(content, ContentType):
+        #     raise TypeError('`content` must be a ContentType')
 
         message = {
             'parts': [content],

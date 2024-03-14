@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (14/03/2024)
+
+ - feat: add google vision feature
+
 ## v0.4.0 (13/03/2024)
 
  - feat: add google vision feature

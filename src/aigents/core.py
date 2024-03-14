@@ -526,6 +526,13 @@ class GoogleVision(GoogleChatterMixin, BaseChatter):
         try:
             return response.text
         except ValueError:
+            if len(response.candidates) == 0:
+                logger.error(
+                    "Prompt was blocked: %s.\nPrompt: %s",
+                    response.prompt_feedback,
+                    prompt
+                )
+                return '{"error": try another prompt}'
             text = '\n'.join(
                 [part.text for part in response.candidates[0].content.parts]
             )
@@ -618,6 +625,13 @@ class AsyncGoogleVision(GoogleChatterMixin, BaseChatter):
         try:
             return response.text
         except ValueError:
+            if len(response.candidates) == 0:
+                logger.error(
+                    "Prompt was blocked: %s.\nPrompt: %s",
+                    response.prompt_feedback,
+                    prompt
+                )
+                return '{"error": try another prompt}'
             text = '\n'.join(
                 [part.text for part in response.candidates[0].content.parts]
             )

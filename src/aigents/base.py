@@ -421,7 +421,7 @@ class GoogleChatterMixin:
             load_dotenv()
             self.api_key = os.getenv('GOOGLE_AI_API_KEY')
             if not self.api_key:
-                raise RuntimeError(
+                raise AgentRuntimeError(
                     "Environment variable GOOGLE_AI_API_KEY not set"
                 )
 

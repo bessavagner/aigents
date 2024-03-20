@@ -69,6 +69,8 @@ response = await chatter.answer(
 #### Other Chatters:
 
 * **AsyncGoogleChatter**: async version of `GoogleChatter`;
+* **GoogleVision**: agent for image chat (<span style="color: #b04e27;">Important</span>: gemini-pro-vision does not generate images as for this date);
+* **AsyncGoogleVision**: async version of `GoogleVision`
 * **OpenAIChatter**: chatter that uses OpenAI's API;
 * **BingChatter**: uses the uses [g4f](https://github.com/xtekky/gpt4free/tree/main) adpter, with `Bing` provider;
 * **AsyncBingChatter**: async version of `BingChatter`.

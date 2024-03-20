@@ -4,6 +4,7 @@
 
 ## v0.5.0 (14/03/2024)
 
+ - fix: handle no candidate answer for google
  - feat: add google vision feature
 
 ## v0.4.0 (13/03/2024)

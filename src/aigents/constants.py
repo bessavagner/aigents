@@ -41,6 +41,8 @@ MODELS_EMBEDDING = (
     'text-embedding-3-small',
     'text-embedding-3-large',
     'text-embedding-ada-002',
+    'models/embedding-001',
+    'models/text-embedding-004',
 )
 
 TOKENIZER = (

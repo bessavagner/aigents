@@ -4,6 +4,7 @@ from typing import List
 import spacy
 
 import pandas as pd
+from .errors import ProcessingError
 
 
 class BaseTextProcessor(ABC):
@@ -11,7 +12,14 @@ class BaseTextProcessor(ABC):
         super().__init__()
         self.nlp = None
         if pipeline:
-            self.nlp = spacy.load(pipeline)
+            try:
+                self.nlp = spacy.load(pipeline)
+            except OSError as err:
+                message = (
+                    "You don't seem to have installed the spacy "
+                    f"pipeline {pipeline}. See https://spacy.io/models"
+                )
+                raise ProcessingError(message) from err
         self.text = ''
         self.doc = None
         self.sequences = []

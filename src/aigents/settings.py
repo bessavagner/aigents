@@ -50,14 +50,22 @@ Authors: {author}
 CONFIG_LOG = {
     "version": 1,
     "formatters": {
-        "client": {
-            "format": "%(levelname)s: %(message)s"
-        },
+        "client": {"format": "%(levelname)s: %(message)s"},
         "standard": {
             "format": (
-                "%(levelname)s - function: (%(name)s at "
-                "%(funcName)s line %(lineno)d): %(message)s"
+                "%(levelname)s (at %(pathname)s - %(funcName)s "
+                "in line %(lineno)d): %(message)s"
             )
+        },
+        "debug": {
+            "format": (
+                "%(asctime)s %(levelname)s (at %(funcName)s "
+                "in line %(lineno)d):"
+                "\n\t|──file: %(pathname)s"
+                "\n\t|──task name: %(taskName)s"
+                "\n\t└──message: %(message)s\n"
+            ),
+            "datefmt": "%y-%m-%d %H:%M:%S"
         }
     },
     "handlers": {
@@ -70,28 +78,26 @@ CONFIG_LOG = {
             "class": "logging.StreamHandler",
             "formatter": "standard",
             "level": "DEBUG"
+        },
+        "debug": {
+            "class": "logging.StreamHandler",
+            "formatter": "debug",
+            "level": "DEBUG"
         }
     },
-    "root": {
-        "handlers": [
-            "standard"
-        ],
-        "level": "DEBUG"
-    },
+    "root": {"handlers": ["standard"], "level": "DEBUG"},
     "loggers": {
         "client": {
-            "handlers": [
-                "client"
-            ],
+            "handlers": ["client"],
             "level": "DEBUG",
-            "propagate": False
+            "propagate": False,
+            "disable_existing_loggers": False
         },
         "standard": {
-            "handlers": [
-                "standard"
-            ],
+            "handlers": ["standard"],
             "level": "DEBUG",
-            "propagate": False
+            "propagate": False,
+            "disable_existing_loggers": False
         }
     }
 }

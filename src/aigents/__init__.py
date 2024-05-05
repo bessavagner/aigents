@@ -1,3 +1,7 @@
+import logging
+from logging import NullHandler
+from logging.config import dictConfig
+
 from .core import OpenAIChatter
 from .core import AsyncOpenAIChatter
 from .core import GoogleChatter
@@ -8,6 +12,12 @@ from .core import AsyncBingChatter
 from . import base
 from . import constants
 from . import prompts
+
+from .settings import CONFIG_LOG
+
+dictConfig(CONFIG_LOG)
+# Set default logging handler to avoid \"No handler found\" warnings.
+logging.getLogger(__name__).addHandler(NullHandler())
 
 
 __all__ = [

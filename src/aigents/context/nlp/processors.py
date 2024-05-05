@@ -20,6 +20,7 @@ from aigents.constants import (
 from aigents.utils import get_encoding, run_async
 
 from .base import BaseTextProcessor
+from .utils import clean_text
 from .errors import ProcessingError
 
 
@@ -81,8 +82,10 @@ class TextProcessor(BaseTextProcessor):
         """
         super().__init__(*args, pipeline=pipeline, **kwargs)
 
-    def split(self, text) -> List[str]:
+    def split(self, text, clean=True) -> List[str]:
         self.text = text
+        if clean:
+            self.text = clean_text(self.text)
         self.doc = self.nlp(self.text)
         self.sequences = [sent.text for sent in self.doc.sents]
         return self.sequences
@@ -92,7 +95,6 @@ class TextProcessor(BaseTextProcessor):
                   model: str = MODELS[0],
                   max_tokens: int = 100) -> List[str]:
         if text is not None:
-            self.text = text
             self.split(text)
         # group sentences semantically with a maximum number of tokens
         # using tiktoken to compute tokens
@@ -178,6 +180,7 @@ class TextProcessor(BaseTextProcessor):
                 threshold=threshold
             )
 
+        logger.debug("HERE!")
         chunks = self.chunks
         n_tokens = self.n_tokens
         self.dataframe = pd.DataFrame({'chunks': chunks, 'n_tokens': n_tokens})
@@ -248,8 +251,9 @@ class TextProcessor(BaseTextProcessor):
                 threshold=threshold
             )
 
+        if 'gemini' in embedding_model.lower():
+            GoogleChatter(api_key=api_key)
         tasks = []
-        
         async def create_embedding_openai(row):
             
             client = AsyncOpenAIChatter(
@@ -264,25 +268,54 @@ class TextProcessor(BaseTextProcessor):
         
         def create_embedding_gemini(row):
             # NOTE: GoogleChatter is called only for setting credentials 
-            GoogleChatter(api_key=api_key)
-            embedding = genai.embed_content(
-                model=MODELS_EMBEDDING[-2],
-                content=row[EMBEDDINGS_COLUMNS[0]],
-                task_type='SEMANTIC_SIMILARITY'
-            )
+            logger.debug('calling genai.embed_content')
+            try:
+                embedding = genai.embed_content(
+                    model=MODELS_EMBEDDING[-2],
+                    content=row[EMBEDDINGS_COLUMNS[0]],
+                    task_type='SEMANTIC_SIMILARITY'
+                )
+            except ValueError as err:
+                logger.debug(row[EMBEDDINGS_COLUMNS[0]])
+                raise err
             return embedding['embedding']
 
         async def create_embedding(row):
             if 'openai' in embedding_model.lower():
                 return await create_embedding_openai(row)
             if 'gemini' in embedding_model.lower():
-                return await asyncio.to_thread(create_embedding_gemini, row)
+                task = asyncio.create_task(
+                    asyncio.to_thread(create_embedding_gemini, row)
+                )
+                if not task.done():
+                    await task
+                    result = task.result()
+                try:
+                    exception = task.exception()
+                    if exception is not None:
+                        logger.error("Task failed")
+                        logger.error(exception)
+                        return None
+                except asyncio.InvalidStateError:
+                    logger.info("Task cancelled")
+                    return None
+                return result
             raise ValueError(
                 "`async_embeddings` only supports `openai` or `gemini` models"
             )
 
         for _, row in self.dataframe.iterrows():
-            tasks.append(create_embedding(row))
+            logger.debug('%s: loop for calling create_embedding', _)
+            if 'openai' in embedding_model.lower():
+                tasks.append(create_embedding_openai(row))
+            if 'gemini' in embedding_model.lower():
+                tasks.append(
+                    asyncio.create_task(
+                        asyncio.to_thread(create_embedding_gemini, row)
+                    )
+                )
+            # allow some of the tasks time to start
+            await asyncio.sleep(0.1)
         
         self.dataframe[EMBEDDINGS_COLUMNS[2]] = await asyncio.gather(*tasks)
 

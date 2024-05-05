@@ -1,5 +1,6 @@
 import inspect
 import logging
+import asyncio
 from pathlib import Path
 from typing import Coroutine
 
@@ -78,6 +79,7 @@ class Context(BaseContext):
         self.question_embedding = None
         self.pipeline: str = None
         self.embeddings_generator: str = None
+        self.embedding_model: str = None
 
     async def generate_embeddings(
             self,
@@ -191,7 +193,9 @@ class Context(BaseContext):
             try:
                 if isinstance(embeddings_generator, str):
                     try:
-                        self.pipeline, self.embedding_model = embeddings_generator.rsplit(maxsplit=2, sep=',')
+                        (
+                            self.pipeline, self.embedding_model
+                        ) = embeddings_generator.rsplit(maxsplit=2, sep=',')
                     except ValueError as err:
                         if 'unpack' in str(err):
                             message = (
@@ -202,6 +206,7 @@ class Context(BaseContext):
                             message = f"{message}: {err.message}"
                             raise ContextError(message) from err
                     try:
+                        logger.debug("HERE")
                         self.embeddings = await to_embeddings_async(
                             source,
                             self.pipeline.strip(),
@@ -220,7 +225,8 @@ class Context(BaseContext):
                 else:
                     raise ContextError(
                         '`embeddings_generator` must be a coroutine or a str '
-                        'corresponding to a spacy pipeline model.'
+                        'corresponding to a spacy pipeline model (either `openai`or '
+                        '`gemini`) separated by a comma'
                     )
             except APIError as err:
                 message = (
@@ -234,12 +240,14 @@ class Context(BaseContext):
 
     async def generate_context(self,
                                question: str,
+                               data: pd.DataFrame = None,
                                max_length: int = 1800,
                                pipeline: str = None,
                                embedding_model: str = None) -> str:
         results = []
         current_length = 0
-        data = self.embeddings
+        if data is None:
+            data = self.embeddings
         if pipeline is None:
             pipeline = self.pipeline
             if pipeline is None:
@@ -288,3 +296,30 @@ class Context(BaseContext):
             )
         # Return the context
         return context
+
+
+async def embeddings_from_dict(source: dict,
+                               max_tokens: int = None,  # tokens per chunk
+                               embeddings_generator: str | Coroutine = None,) -> pd.DataFrame:
+    contexter = Context()
+    dataframe = None
+    tasks = []
+    for text in source.values():
+        tasks.append(
+            contexter.generate_embeddings(
+                source=text,
+                max_tokens=max_tokens,
+                embeddings_generator=embeddings_generator
+            )
+        )
+
+    results = await asyncio.gather(*tasks)
+    for reference, result in zip(source, results):
+        if dataframe is None:
+            dataframe = result
+            dataframe['reference'] = dataframe.shape[0]*[reference]
+            continue
+        result['reference'] = result.shape[0]*[reference]
+        dataframe = pd.concat([dataframe, result], ignore_index=True)
+    return dataframe
+        

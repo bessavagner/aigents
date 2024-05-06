@@ -378,14 +378,33 @@ def naive_text_to_embeddings(
         model: str = MODELS[0],
         max_tokens: int = 500,
         api_key=None,
-        organization=None
+        organization=None,
+        **kwargs
 ):
     processor = TextProcessor()
     processor.dataframe = naive_token_splitter(text, model, max_tokens)
     return processor.embeddings(
         model=model,
-        api_key=openai_key,
-        organization=openai_organization
+        api_key=api_key,
+        organization=organization,
+        **kwargs
+    )
+
+async def naive_text_to_embeddings_async(
+        text: str,
+        model: str = MODELS[0],
+        max_tokens: int = 500,
+        api_key=None,
+        organization=None,
+        **kwargs
+):
+    processor = TextProcessor()
+    processor.dataframe = naive_token_splitter(text, model, max_tokens)
+    return await processor.async_embeddings(
+        model=model,
+        api_key=api_key,
+        organization=organization,
+        **kwargs
     )
 
 

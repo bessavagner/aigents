@@ -9,6 +9,7 @@ from .core import AsyncGoogleChatter
 from .core import AsyncGoogleVision
 from .core import BingChatter
 from .core import AsyncBingChatter
+from .context.core import Context
 from . import base
 from . import constants
 from . import prompts
@@ -28,7 +29,8 @@ __all__ = [
     'AsyncGoogleVision',
     'BingChatter',
     'AsyncBingChatter',
+    'Context',
     'base',
     'constants',
-    'prompts'
+    'prompts',
 ]

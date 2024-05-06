@@ -15,7 +15,7 @@ from aigents.constants import (
 from aigents.settings import DEBUG
 from aigents.utils import number_of_tokens
 
-from .nlp.processors import TextProcessor
+from .nlp.processors import naive_text_to_embeddings_async
 from .nlp.errors import ProcessingError
 from .base import BaseContext
 from .errors import ContextError
@@ -86,7 +86,7 @@ class Context(BaseContext):
             source: str | pd.DataFrame | Path | dict = None,
             model: str = MODELS[0],
             max_tokens: int = None,  # tokens per chunk
-            embeddings_generator: str | Coroutine = None,
+            embeddings_generator: str | Coroutine = naive_text_to_embeddings_async,
             **kwargs
     ) -> pd.DataFrame:
         """Generate embeddings dataframe from source.
@@ -166,9 +166,9 @@ class Context(BaseContext):
             source = self.text
         if max_tokens is None:
             max_tokens = self.max_tokens
+        
         if isinstance(source, pd.DataFrame):
             self.embeddings = source
-
         elif isinstance(source, Path):
             self.embeddings = pd.read_parquet(source, engine='pyarrow')
         elif isinstance(source, dict):
@@ -206,6 +206,7 @@ class Context(BaseContext):
                             message = f"{message}: {err.message}"
                             raise ContextError(message) from err
                     try:
+                        logger.debug("HERE")
                         self.embeddings = await to_embeddings_async(
                             source,
                             self.pipeline.strip(),
@@ -277,7 +278,7 @@ class Context(BaseContext):
 
             results.append(row["chunks"].replace('\n', ' '))
 
-            current_length = row["chunks"] + 3
+            current_length = number_of_tokens("\n-".join(results))
 
             if current_length > max_length:
                 if len(results) > 1:

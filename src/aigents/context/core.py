@@ -206,7 +206,6 @@ class Context(BaseContext):
                             message = f"{message}: {err.message}"
                             raise ContextError(message) from err
                     try:
-                        logger.debug("HERE")
                         self.embeddings = await to_embeddings_async(
                             source,
                             self.pipeline.strip(),
@@ -278,7 +277,7 @@ class Context(BaseContext):
 
             results.append(row["chunks"].replace('\n', ' '))
 
-            current_length = number_of_tokens("\n-".join(results))
+            current_length = row["chunks"] + 3
 
             if current_length > max_length:
                 if len(results) > 1:

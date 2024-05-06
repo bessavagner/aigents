@@ -180,7 +180,6 @@ class TextProcessor(BaseTextProcessor):
                 threshold=threshold
             )
 
-        logger.debug("HERE!")
         chunks = self.chunks
         n_tokens = self.n_tokens
         self.dataframe = pd.DataFrame({'chunks': chunks, 'n_tokens': n_tokens})
@@ -223,7 +222,7 @@ class TextProcessor(BaseTextProcessor):
                 )
                 return embedding['embedding']
             raise ValueError(
-                "`async_embeddings` only supports `openai` or `gemini` models"
+                "`embeddings` only supports `openai` or `gemini` models"
             )
 
 
@@ -268,7 +267,6 @@ class TextProcessor(BaseTextProcessor):
         
         def create_embedding_gemini(row):
             # NOTE: GoogleChatter is called only for setting credentials 
-            logger.debug('calling genai.embed_content')
             try:
                 embedding = genai.embed_content(
                     model=MODELS_EMBEDDING[-2],
@@ -280,32 +278,7 @@ class TextProcessor(BaseTextProcessor):
                 raise err
             return embedding['embedding']
 
-        async def create_embedding(row):
-            if 'openai' in embedding_model.lower():
-                return await create_embedding_openai(row)
-            if 'gemini' in embedding_model.lower():
-                task = asyncio.create_task(
-                    asyncio.to_thread(create_embedding_gemini, row)
-                )
-                if not task.done():
-                    await task
-                    result = task.result()
-                try:
-                    exception = task.exception()
-                    if exception is not None:
-                        logger.error("Task failed")
-                        logger.error(exception)
-                        return None
-                except asyncio.InvalidStateError:
-                    logger.info("Task cancelled")
-                    return None
-                return result
-            raise ValueError(
-                "`async_embeddings` only supports `openai` or `gemini` models"
-            )
-
         for _, row in self.dataframe.iterrows():
-            logger.debug('%s: loop for calling create_embedding', _)
             if 'openai' in embedding_model.lower():
                 tasks.append(create_embedding_openai(row))
             if 'gemini' in embedding_model.lower():

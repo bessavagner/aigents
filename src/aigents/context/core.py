@@ -206,7 +206,6 @@ class Context(BaseContext):
                             message = f"{message}: {err.message}"
                             raise ContextError(message) from err
                     try:
-                        logger.debug("HERE")
                         self.embeddings = await to_embeddings_async(
                             source,
                             self.pipeline.strip(),

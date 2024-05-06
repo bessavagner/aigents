@@ -90,6 +90,76 @@ chatter.change_model(MODELS[3])
 print(chatter.model)
 ```
 
+### Context
+
+The `Context` class in `aigents` provides functionality for generating embeddings from a source and generating a context based on a question. This is particularly useful for contextual chat applications.
+
+#### Generating Embeddings
+
+To generate embeddings from a source, you can use the `generate_embeddings` method. This method supports generating embeddings from a string, a pandas DataFrame, a Path to a parquet file containing embeddings, or a dictionary containing 'chunks'of text, 'n_tokens' corresponding to the number of tokens, counted using tiktoken library, and 'embeddings' which are numpy arrays of the encoded chunks as embeddings.
+
+Here's an example of how to use the `generate_embeddings` method:
+
+```python
+import asyncio
+from aigents import Context
+
+async def get_embeddings_dataframe(text):
+    
+    # Initialize the Context with your text
+    context = Context(text=text)
+    # Generate embeddings using the default model
+    return await context.generate_embeddings(embedding_model='gemini')
+
+text = ''
+with open('path/to/your/text', 'r') as textfile:
+    text = textfile.read()
+data = asyncio.run(get_embeddings_dataframe(text))
+# Print the generated embeddings
+print(data)
+```
+
+Here we use the Google's Gemini embedding generator. Note that you'll have to set your Gemini's API key in yur environment variables. Alternatively you can pass the api key as the argument `api_key` in `generate_embeddings` method.
+
+Currently, embeddings generation via `Context` is only possible using async paradigm. This type of choice is due to the underperform of when using large texts, since each chunk of text corresponds to one api call, so it's better to make asynchronous calls.
+
+After context generation, you can extract only relevant chunks based on a given *query*:
+
+
+```python
+import asyncio
+from aigents import Context
+
+async def get_relevant_chunks(question, text):
+    embedding_model = 'gemini'
+    pipeline = 'en_core_web_md'
+    # Initialize the Context with your text
+    context = Context(text=text)
+    # Generate embeddings using the default model
+    await context.generate_embeddings(embedding_model=embedding_model)
+    return await context.generate_context(
+        question,
+        pipeline=pepiline
+    )
+
+text = ''
+with open('path/to/your/text', 'r') as textfile:
+    text = textfile.read()
+
+question = 'What is this article about?'
+relevant_data = asyncio.run(get_relevant_chunk(question, text))
+# Print the generated embeddings
+print(relevant_data)
+```
+
+You'll have to install the corresponding [spacy pipeline](https://github.com/explosion/spacy-models/releases). For instance, if your text is in portuguese, you'd want to install `pt-core-news-sm` or `pt-core-news-md`:
+
+```bash
+python -m spacy install pt-core-news-md
+```
+
+Than pass the value to the argument `pipeline` of the `generate_context` method.
+
 ## Contributing
 
 Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.

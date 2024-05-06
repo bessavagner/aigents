@@ -243,7 +243,8 @@ class Context(BaseContext):
                                data: pd.DataFrame = None,
                                max_length: int = 1800,
                                pipeline: str = None,
-                               embedding_model: str = None) -> str:
+                               embedding_model: str = None,
+                               prefix: str = None) -> str:
         results = []
         current_length = 0
         if data is None:
@@ -274,6 +275,8 @@ class Context(BaseContext):
             distance_metric='cosine'
         )
 
+        if prefix is None:
+            prefix = '*'
         for _, row in data.sort_values('distances', ascending=True).iterrows():
 
             results.append(row["chunks"].replace('\n', ' '))
@@ -285,9 +288,9 @@ class Context(BaseContext):
                     results.pop()
                 break
 
-        context = f"* {results[0]}"
+        context = f"{prefix} {results[0]}"
         context += "".join(
-            [f"\n* {result}" for result in results[1:]]
+            [f"\n{prefix} {result}" for result in results[1:]]
         )
         length = number_of_tokens(context)
         if DEBUG:

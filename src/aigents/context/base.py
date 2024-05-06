@@ -48,7 +48,7 @@ class BaseContext(ABC):
                     force_ascii=False
                 )
             )['data']
-            self.json = {column: [] for column in EMBEDDINGS_COLUMNS}
+            self.json = {column: [] for column in self.embeddings.columns}
             for row in data:
                 for key, value in row.items():
                     self.json[key].append(value)

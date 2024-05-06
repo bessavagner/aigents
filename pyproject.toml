@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aigents"
-version = "0.7.1"
+version = "0.7.2"
 description = "Adapters for Large Language Models and Generative Pre-trained Transformers APIs"
 authors = ["Vagner Bessa <bessavagner@gmail.com>"]
 license = "GPL-3.0-only"

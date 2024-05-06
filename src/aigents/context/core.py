@@ -172,9 +172,9 @@ class Context(BaseContext):
         elif isinstance(source, Path):
             self.embeddings = pd.read_parquet(source, engine='pyarrow')
         elif isinstance(source, dict):
-            if EMBEDDINGS_COLUMNS != tuple(source.keys()):
+            if not set(EMBEDDINGS_COLUMNS).issubset(set(source.keys())):
                 raise ContextError(
-                    f"Keys of `source` must be: {','.join(EMBEDDINGS_COLUMNS)}"
+                    f"Keys of `source` must contain: {','.join(EMBEDDINGS_COLUMNS)}"
                 )
             lengths = list(map(len, source.values()))
             if not all(x == lengths[0] for x in lengths[1:]):

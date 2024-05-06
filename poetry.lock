@@ -952,23 +952,6 @@ lxml = ">=5.1.0"
 dev = ["pytest (>=8.0.1)", "ruff (>=0.3.0)"]
 
 [[package]]
-name = "en-core-web-md"
-version = "3.7.1"
-description = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
-optional = false
-python-versions = "*"
-files = [
-    {file = "en_core_web_md-3.7.1-py3-none-any.whl", hash = "sha256:6a0f857a2b4d219c6fa17d455f82430b365bf53171a2d919b9376e5dc9be032e"},
-]
-
-[package.dependencies]
-spacy = ">=3.7.2,<3.8.0"
-
-[package.source]
-type = "url"
-url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.1/en_core_web_md-3.7.1-py3-none-any.whl"
-
-[[package]]
 name = "exceptiongroup"
 version = "1.2.0"
 description = "Backport of PEP 654 (exception groups)"
@@ -2675,23 +2658,6 @@ files = [
 test = ["enum34", "ipaddress", "mock", "pywin32", "wmi"]
 
 [[package]]
-name = "pt-core-news-md"
-version = "3.7.0"
-description = "Portuguese pipeline optimized for CPU. Components: tok2vec, morphologizer, parser, lemmatizer (trainable_lemmatizer), senter, ner, attribute_ruler."
-optional = false
-python-versions = "*"
-files = [
-    {file = "pt_core_news_md-3.7.0-py3-none-any.whl", hash = "sha256:8114b18aad511452f3c4682fbbedd440f453f8bd3de20ce7bf8a1ca6543a0315"},
-]
-
-[package.dependencies]
-spacy = ">=3.7.0,<3.8.0"
-
-[package.source]
-type = "url"
-url = "https://github.com/explosion/spacy-models/releases/download/pt_core_news_md-3.7.0/pt_core_news_md-3.7.0-py3-none-any.whl"
-
-[[package]]
 name = "ptyprocess"
 version = "0.7.0"
 description = "Run a subprocess in a pseudo terminal"
@@ -4269,40 +4235,6 @@ files = [
 h11 = ">=0.9.0,<1"
 
 [[package]]
-name = "xx-ent-wiki-sm"
-version = "3.7.0"
-description = "Multi-language pipeline optimized for CPU. Components: ner."
-optional = false
-python-versions = "*"
-files = [
-    {file = "xx_ent_wiki_sm-3.7.0-py3-none-any.whl", hash = "sha256:66c227a793f8a79814d6ca1da7c0ae633172e2fb0a94737bc8bd2e517479e73c"},
-]
-
-[package.dependencies]
-spacy = ">=3.7.0,<3.8.0"
-
-[package.source]
-type = "url"
-url = "https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.7.0/xx_ent_wiki_sm-3.7.0-py3-none-any.whl"
-
-[[package]]
-name = "xx-sent-ud-sm"
-version = "3.7.0"
-description = "Multi-language pipeline optimized for CPU. Components: senter."
-optional = false
-python-versions = "*"
-files = [
-    {file = "xx_sent_ud_sm-3.7.0-py3-none-any.whl", hash = "sha256:aafb609d5a895a62ed9672fbef2aa8061106a4b164a700999a376f8529acc3ad"},
-]
-
-[package.dependencies]
-spacy = ">=3.7.0,<3.8.0"
-
-[package.source]
-type = "url"
-url = "https://github.com/explosion/spacy-models/releases/download/xx_sent_ud_sm-3.7.0/xx_sent_ud_sm-3.7.0-py3-none-any.whl"
-
-[[package]]
 name = "yarl"
 version = "1.9.4"
 description = "Yet another URL library"
@@ -4469,4 +4401,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "187e7aecad73c56dc4cb626881243eff8978b618df075f52bef9d6706c7a8142"
+content-hash = "6426ffac9f54b3205f8a8fb1c510b5bd4d1da87efe30b5caeb34cc4903d6b115"

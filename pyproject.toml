@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aigents"
-version = "0.6.0"
+version = "0.7.0"
 description = "Adapters for Large Language Models and Generative Pre-trained Transformers APIs"
 authors = ["Vagner Bessa <bessavagner@gmail.com>"]
 license = "GPL-3.0-only"
@@ -25,10 +25,6 @@ pillow = "^10.2.0"
 g4f = {extras = ["all"], version = "^0.2.4.1"}
 spacy = "^3.7.4"
 pandas = "^2.2.2"
-pt-core-news-md = {url = "https://github.com/explosion/spacy-models/releases/download/pt_core_news_md-3.7.0/pt_core_news_md-3.7.0-py3-none-any.whl"}
-xx-ent-wiki-sm = {url = "https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.7.0/xx_ent_wiki_sm-3.7.0-py3-none-any.whl"}
-xx-sent-ud-sm = {url = "https://github.com/explosion/spacy-models/releases/download/xx_sent_ud_sm-3.7.0/xx_sent_ud_sm-3.7.0-py3-none-any.whl"}
-en-core-web-md = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.1/en_core_web_md-3.7.1-py3-none-any.whl"}
 scipy = "^1.13.0"
 
 [tool.poetry.group.dev.dependencies]

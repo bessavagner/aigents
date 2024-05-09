@@ -20,7 +20,7 @@ from aigents.constants import (
 from aigents.utils import get_encoding, run_async
 
 from .base import BaseTextProcessor
-from .utils import clean_text
+from .utils import clean_text, deep_clean
 from .errors import ProcessingError
 
 
@@ -82,10 +82,12 @@ class TextProcessor(BaseTextProcessor):
         """
         super().__init__(*args, pipeline=pipeline, **kwargs)
 
-    def split(self, text, clean=True) -> List[str]:
+    def split(self, text, clean=True, deep_clean=True) -> List[str]:
         self.text = text
         if clean:
             self.text = clean_text(self.text)
+            if deep_clean:
+                self.text = deep_clean(self.text)
         self.doc = self.nlp(self.text)
         self.sequences = [sent.text for sent in self.doc.sents]
         return self.sequences

@@ -80,6 +80,7 @@ class Context(BaseContext):
         self.pipeline: str = None
         self.embeddings_generator: str = None
         self.embedding_model: str = None
+        self.language: str = None
 
     async def generate_embeddings(
             self,
@@ -210,7 +211,8 @@ class Context(BaseContext):
                             source,
                             self.pipeline.strip(),
                             max_tokens=max_tokens,
-                            embedding_model=self.embedding_model.strip()
+                            embedding_model=self.embedding_model.strip(),
+                            **kwargs
                         )
                     except ProcessingError as err:
                         raise ContextError(err.message) from err

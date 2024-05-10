@@ -82,12 +82,23 @@ class TextProcessor(BaseTextProcessor):
         """
         super().__init__(*args, pipeline=pipeline, **kwargs)
 
-    def split(self, text, clean=True, deep_clean_=True) -> List[str]:
+    def split(self,
+              text,
+              clean=True,
+              deep_clean_=True,
+              language="english",
+              n_grams_number=20,
+              n_grams_tolerance=2) -> List[str]:
         self.text = text
         if clean:
             self.text = clean_text(self.text)
             if deep_clean_:
-                self.text = deep_clean(self.text)
+                self.text = deep_clean(
+                    self.text,
+                    language=language,
+                    n_grams_number=n_grams_number,
+                    n_grams_tolerance=n_grams_tolerance
+                )
         self.doc = self.nlp(self.text)
         self.sequences = [sent.text for sent in self.doc.sents]
         return self.sequences
@@ -95,9 +106,21 @@ class TextProcessor(BaseTextProcessor):
     def to_chunks(self,
                   text: str = None,
                   model: str = MODELS[0],
-                  max_tokens: int = 100) -> List[str]:
+                  max_tokens: int = 100,
+                  clean=True,
+                  deep_clean_=True,
+                  language="english",
+                  n_grams_number=20,
+                  n_grams_tolerance=2) -> List[str]:
         if text is not None:
-            self.split(text)
+            self.split(
+                text,
+                clean=clean,
+                deep_clean_=deep_clean_,
+                language=language,
+                n_grams_number=n_grams_number,
+                n_grams_tolerance=n_grams_tolerance,
+            )
         # group sentences semantically with a maximum number of tokens
         # using tiktoken to compute tokens
         # example maximum number of tokens
@@ -130,7 +153,12 @@ class TextProcessor(BaseTextProcessor):
                            data: str | List[str] = None,
                            model: str = MODELS[0],
                            max_tokens: int = 100,
-                           threshold: float = 0.8) -> List[str]:
+                           threshold: float = 0.8,
+                           clean=True,
+                           deep_clean_=True,
+                           language="english",
+                           n_grams_number=20,
+                           n_grams_tolerance=2) -> List[str]:
         
         if data is not None:
             if isinstance(data, list):
@@ -145,6 +173,11 @@ class TextProcessor(BaseTextProcessor):
                     text=data,
                     model=model,
                     max_tokens=max_tokens,
+                    clean=clean,
+                    deep_clean_=deep_clean_,
+                    language=language,
+                    n_grams_number=n_grams_number,
+                    n_grams_tolerance=n_grams_tolerance,
                 )
         
         docs = [self.nlp(sentence) for sentence in self.chunks]
@@ -173,13 +206,23 @@ class TextProcessor(BaseTextProcessor):
                      data: str | List[str] = None,
                      model: str = MODELS[0],
                      max_tokens: int = 120,
-                     threshold: float = 0.8) -> pd.DataFrame:
+                     threshold: float = 0.8,
+                     clean=True,
+                     deep_clean_=True,
+                     language="english",
+                     n_grams_number=20,
+                     n_grams_tolerance=2) -> pd.DataFrame:
         if data is not None:
             self.group_by_semantics(
                 data=data,
                 model=model,
                 max_tokens=max_tokens,
-                threshold=threshold
+                threshold=threshold,
+                clean=clean,
+                deep_clean_=deep_clean_,
+                language=language,
+                n_grams_number=n_grams_number,
+                n_grams_tolerance=n_grams_tolerance,
             )
 
         chunks = self.chunks
@@ -194,13 +237,23 @@ class TextProcessor(BaseTextProcessor):
                    threshold: float = .8,
                    api_key=None,
                    organization=None,
-                   embedding_model='openai') -> pd.DataFrame:
+                   embedding_model='openai',
+                   clean=True,
+                   deep_clean_=True,
+                   language="english",
+                   n_grams_number=20,
+                   n_grams_tolerance=2) -> pd.DataFrame:
         if data is not None and not isinstance(data, pd.DataFrame):
             self.to_dataframe(
                 data=data,
                 model=model,
                 max_tokens=max_tokens,
-                threshold=threshold
+                threshold=threshold,
+                clean=clean,
+                deep_clean_=deep_clean_,
+                language=language,
+                n_grams_number=n_grams_number,
+                n_grams_tolerance=n_grams_tolerance,
             )
 
         embeddings = []
@@ -243,13 +296,23 @@ class TextProcessor(BaseTextProcessor):
                                api_key=None,
                                organization=None,
                                embedding_model='openai',
+                               clean=True,
+                               deep_clean_=True,
+                               language="english",
+                               n_grams_number=20,
+                               n_grams_tolerance=2,
                                **kwargs) -> pd.DataFrame:
         if data is not None:
             self.to_dataframe(
                 data=data,
                 model=model,
                 max_tokens=max_tokens,
-                threshold=threshold
+                threshold=threshold,
+                clean=clean,
+                deep_clean_=deep_clean_,
+                language=language,
+                n_grams_number=n_grams_number,
+                n_grams_tolerance=n_grams_tolerance,
             )
 
         if 'gemini' in embedding_model.lower():

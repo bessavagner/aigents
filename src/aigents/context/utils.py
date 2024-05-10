@@ -13,12 +13,22 @@ def to_embeddings(
         max_tokens=120,
         threshold=0.8,
         embedding_model='openai',
+        clean: bool = True,
+        deep_clean_: bool = True,
+        language: str = "english",
+        n_grams_number: int = 20,
+        n_grams_tolerance: int = 2,
 ) -> DataFrame:
     return TextProcessor(pipeline=pipeline).embeddings(
         text,
         max_tokens=max_tokens,
         threshold=threshold,
         embedding_model=embedding_model,
+        clean=clean,
+        deep_clean_=deep_clean_,
+        language=language,
+        n_grams_number=n_grams_number,
+        n_grams_tolerance=n_grams_tolerance,
     )
 
 
@@ -28,38 +38,68 @@ async def to_embeddings_async(
         max_tokens=120,
         threshold=0.8,
         embedding_model='openai',
+        clean: bool = True,
+        deep_clean_: bool = True,
+        language: str = "english",
+        n_grams_number: int = 20,
+        n_grams_tolerance: int = 2,
 ) -> DataFrame:
     return await TextProcessor(pipeline=pipeline).async_embeddings(
         text,
         max_tokens=max_tokens,
         threshold=threshold,
         embedding_model=embedding_model,
+        clean=clean,
+        deep_clean_=deep_clean_,
+        language=language,
+        n_grams_number=n_grams_number,
+        n_grams_tolerance=n_grams_tolerance,
     )
 
 
 def to_embeddings_pt(text: str,
                      max_tokens=120,
                      threshold=0.8,
-                     embedding_model='openai',) -> DataFrame:
+                     embedding_model='openai',
+                     clean: bool = True,
+                     deep_clean_: bool = True,
+                     language: str = "english",
+                     n_grams_number: int = 20,
+                     n_grams_tolerance: int = 2,) -> DataFrame:
     return to_embeddings(
         text,
         pipeline=PIPE_LINES[0],
         max_tokens=max_tokens,
         threshold=threshold,
         embedding_model=embedding_model,
+        clean=clean,
+        deep_clean_=deep_clean_,
+        language=language,
+        n_grams_number=n_grams_number,
+        n_grams_tolerance=n_grams_tolerance,
     )
 
 
 async def to_embeddings_pt_async(text: str,
                                  max_tokens=120,
                                  threshold=0.8,
-                                 embedding_model='openai',) -> DataFrame:
+                                 embedding_model='openai',
+                                 clean: bool = True,
+                                 deep_clean_: bool = True,
+                                 language: str = "english",
+                                 n_grams_number: int = 20,
+                                 n_grams_tolerance: int = 2,) -> DataFrame:
     return await to_embeddings_async(
         text,
         pipeline=PIPE_LINES[0],
         max_tokens=max_tokens,
         threshold=threshold,
         embedding_model=embedding_model,
+        clean=clean,
+        deep_clean_=deep_clean_,
+        language=language,
+        n_grams_number=n_grams_number,
+        n_grams_tolerance=n_grams_tolerance,
     )
 
 def distances_from_embeddings(

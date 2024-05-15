@@ -326,7 +326,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
         config = genai.types.GenerationConfig(temperature=self.temperature)
 
         response = self.client.generate_content(
-            messages, generation_config=config
+            messages, generation_config=config,**kwargs
         )
         self.last_response = response
         try:
@@ -419,7 +419,7 @@ class AsyncGoogleChatter(GoogleChatter):
         
         config = genai.types.GenerationConfig(temperature=self.temperature)
         response = await self.client.generate_content_async(
-            messages, generation_config=config
+            messages, generation_config=config, **kwargs
         )
 
         try:
@@ -521,7 +521,7 @@ class GoogleVision(GoogleChatterMixin, BaseChatter):
         if prompt:
             message = [prompt, img]
         response = self.client.generate_content(
-            message
+            message, **kwargs
         )
         try:
             return response.text
@@ -620,7 +620,7 @@ class AsyncGoogleVision(GoogleChatterMixin, BaseChatter):
         if prompt:
             message = [prompt, img]
         response = await self.client.generate_content_async(
-            message
+            message, **kwargs
         )
         try:
             return response.text

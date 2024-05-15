@@ -484,7 +484,7 @@ class GoogleChatterMixin:
                     "Please summarize the following conversation "
                     "(IMPORTANT: keep the user's language):\n"
                 )
-                if self.set_up:
+                if self.setup:
                     summary_prompt += "\n".join(
                         message['parts'] for message in self.messages[1:-1]
                     )
@@ -501,7 +501,7 @@ class GoogleChatterMixin:
 
                 # Replace the conversation with the summary and the
                 # last message
-                if self.set_up:
+                if self.setup:
                     self.messages = [
                         self.messages[0],
                         {'role': ROLES[1], 'parts': [summary_content]},
@@ -520,7 +520,7 @@ class GoogleChatterMixin:
             else:
                 # Remove the oldest message if summarization is not possible
                 # or did not help
-                if self.set_up:
+                if self.setup:
                     removed_message = self.messages.pop(1)
                 else:
                     removed_message = self.messages.pop(0)
@@ -538,7 +538,7 @@ class GoogleChatterMixin:
 
             if len(self.messages) <= 2:
                 # If we cannot reduce further, raise an error
-                if self.set_up or len(self.messages) == 1:
+                if self.setup or len(self.messages) == 1:
                     raise MessageError(
                         'Conversation exceeds maximum number of '
                         'tokens and cannot be reduced further.'

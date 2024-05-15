@@ -204,7 +204,8 @@ class Context(BaseContext):
                                 "pipeline and a model (either `openai`or "
                                 "`gemini`) separated by a comma"
                             )
-                            message = f"{message}: {err.message}"
+                            err_message = getattr(err, 'message', str(err))
+                            message = f"{message}: {err_message}"
                             raise ContextError(message) from err
                     try:
                         self.embeddings = await to_embeddings_async(

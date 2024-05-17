@@ -476,7 +476,12 @@ class GoogleChatterMixin:
         Returns:
             None
         """
-        n_tokens = self.client.count_tokens(self.messages)
+        client = self.client
+        if self.model == MODELS[6]:
+            n_tokens = self.client.count_tokens(self.messages)
+        else:
+            client = genai.GenerativeModel(model_name=MODELS[6])
+            n_tokens = client.count_tokens(self.messages)
         while n_tokens.total_tokens > self.max_tokens:
             if use_agent and len(self.messages) > 2:
                 # Attempt to summarize the conversation
@@ -531,7 +536,7 @@ class GoogleChatterMixin:
                     )
 
             # Recalculate the number of tokens after modification
-            n_tokens = self.client.count_tokens(self.messages)
+            n_tokens = client.count_tokens(self.messages)
 
             if n_tokens.total_tokens <= self.max_tokens:
                 break  # Exit the loop if we are within the token limit

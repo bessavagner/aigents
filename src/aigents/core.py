@@ -261,6 +261,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
                  setup: str = None,
                  api_key: str = None,
                  temperature: float = 0.0,
+                 model=MODELS[6],
                  **kwargs):
         """
         Initialize a Google based Chatter instance.
@@ -296,7 +297,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
                          setup=setup,
                          api_key=api_key,
                          temperature=temperature,
-                         model=MODELS[6],
+                         model=model,
                          **kwargs)
 
     def answer(self,
@@ -338,6 +339,12 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
             )
             return response.text
         except ValueError:
+            if len(response.candidates[0].content.parts) == 0:
+                message = (
+                    "Model didn't return any message. "
+                    f"Finish reason: {response.candidates[0].finish_reason.name}"
+                )
+                raise AgentError(message) from err
             text = '\n'.join(
                 [part.text for part in response.candidates[0].content.parts]
             )
@@ -421,13 +428,19 @@ class AsyncGoogleChatter(GoogleChatter):
         response = await self.client.generate_content_async(
             messages, generation_config=config, **kwargs
         )
-
+        self.last_response = response
         try:
             self._update(
                 ROLES[-1], response.text, use_agent=use_agent, agent=agent
             )
             return response.text
         except ValueError:
+            if len(response.candidates[0].content.parts) == 0:
+                message = (
+                    "Model didn't return any message. "
+                    f"Finish reason: {response.candidates[0].finish_reason.name}"
+                )
+                raise AgentError(message) from err
             text = '\n'.join(
                 [part.text for part in response.candidates[0].content.parts]
             )

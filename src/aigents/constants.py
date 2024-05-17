@@ -10,11 +10,13 @@ MODELS = (
     'gpt-3.5-turbo-0125',
     'gpt-3.5-turbo-1106',
     'gpt-4-turbo-preview',
-    'gpt-4-0125-preview',  # 3
+    'gpt-4o',  # 3
     'gpt-4-1106-preview',
     'gpt-4-vision-preview',
-    'gemini-pro',  # Google # 6
-    'gemini-pro-vision'
+    'gemini-1.0-pro',  # Google # 6
+    'gemini-1.0-pro-vision',
+    'gemini-1.5-flash',
+    'gemini-1.5-pro'
 )
 
 MAX_TOKENS = (
@@ -26,6 +28,8 @@ MAX_TOKENS = (
     (MODELS[5], 128000),
     (MODELS[6], 30720),
     (MODELS[7], 12288),
+    (MODELS[8], 1048576),
+    (MODELS[9], 1048576),
 )
 
 ROLES = (  # roles for messages objects

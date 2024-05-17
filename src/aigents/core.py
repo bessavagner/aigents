@@ -402,9 +402,10 @@ class AsyncGoogleChatter(GoogleChatter):
 
     async def answer(self,
                      prompt,
-                     use_agent=True,
-                     conversation=True,
-                     agent=None,
+                     use_agent: bool = True,
+                     conversation: bool = True,
+                     agent: str = None,
+                     generation_config_dict: dict = None,
                      **kwargs):
         if use_agent and agent is None:
             setup = (
@@ -423,8 +424,10 @@ class AsyncGoogleChatter(GoogleChatter):
             ]
         else:
             messages = self.messages if conversation else self.messages[-2:]
-        
-        config = genai.types.GenerationConfig(temperature=self.temperature)
+        if generation_config_dict is None:
+            generation_config_dict = {}
+        generation_config_dict['temperature'] = self.temperature
+        config = genai.types.GenerationConfig(**generation_config_dict)
         response = await self.client.generate_content_async(
             messages, generation_config=config, **kwargs
         )

@@ -23,7 +23,7 @@ from .errors import APIContextError
 from .utils import distances_from_embeddings, to_embeddings_async
 
 
-logger = logging.getLogger('standard')
+logger = logging.getLogger('aigents')
 
 
 class Context(BaseContext):

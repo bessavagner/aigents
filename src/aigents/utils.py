@@ -7,7 +7,7 @@ import tiktoken
 
 from .constants import TOKENIZER
 
-logger = logging.getLogger('standard')
+logger = logging.getLogger('aigents')
 
 def code_to_str(path: str | Path, comments: str = '#{}'):
     filepath = Path(path)

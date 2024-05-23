@@ -93,7 +93,7 @@ CONFIG_LOG = {
             "propagate": False,
             "disable_existing_loggers": False
         },
-        "standard": {
+        "aigents": {
             "handlers": ["standard"],
             "level": "DEBUG",
             "propagate": False,

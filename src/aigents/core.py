@@ -21,7 +21,7 @@ from .errors import AgentError
 from .constants import MODELS, ROLES
 from .settings import DEBUG
 
-logger = logging.getLogger('standard')
+logger = logging.getLogger('aigents')
 
 
 class OpenAIChatter(OpenAIChatterMixin, BaseChatter):

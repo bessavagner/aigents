@@ -24,7 +24,7 @@ from .utils import number_of_tokens
 from .errors import MessageError, AgentError, AgentRuntimeError
 from .settings import DEBUG
 
-logger = logging.getLogger('standard')
+logger = logging.getLogger('aigents')
 
 
 class BaseChatter(ABC):

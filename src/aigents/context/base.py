@@ -9,7 +9,7 @@ import pandas as pd
 from aigents.constants import MODELS, EMBEDDINGS_COLUMNS
 
 DEBUG = True
-logger = logging.getLogger('standard')
+logger = logging.getLogger('aigents')
 
 
 class BaseContext(ABC):

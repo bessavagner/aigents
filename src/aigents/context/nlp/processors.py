@@ -24,7 +24,7 @@ from .utils import clean_text, deep_clean
 from .errors import ProcessingError
 
 
-logger = logging.getLogger('standard')
+logger = logging.getLogger('aigents')
 
 
 class TextProcessor(BaseTextProcessor):

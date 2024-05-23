@@ -1,4 +1,4 @@
-import os
+import time
 import logging
 import asyncio
 from pathlib import Path
@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from PIL import Image
 
 import google.generativeai as genai
+from google.api_core.exceptions import ResourceExhausted
 from g4f.Provider.Bing import Tones
 
 from .base import BaseChatter
@@ -305,6 +306,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
                use_agent=True,
                conversation=True,
                agent=None,
+               retry=2,
                **kwargs):
         if use_agent and agent is None:
             setup = (
@@ -326,9 +328,21 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
 
         config = genai.types.GenerationConfig(temperature=self.temperature)
 
-        response = self.client.generate_content(
-            messages, generation_config=config,**kwargs
-        )
+        try:
+            response = self.client.generate_content(
+                messages, generation_config=config, **kwargs
+            )
+        except ResourceExhausted as err:
+            while retry:
+                logger.warning("%s. Sleeping for 5s", str(err))
+                time.sleep(5)
+                try:
+                    response = self.client.generate_content(
+                        messages, generation_config=config, **kwargs
+                    )
+                except ResourceExhausted:
+                    retry -= 1
+            raise AgentError from err
         self.last_response = response
         try:
             self._update(
@@ -406,6 +420,7 @@ class AsyncGoogleChatter(GoogleChatter):
                      conversation: bool = True,
                      agent: str = None,
                      generation_config_dict: dict = None,
+                     retry: int = 2,
                      **kwargs):
         if use_agent and agent is None:
             setup = (
@@ -428,9 +443,21 @@ class AsyncGoogleChatter(GoogleChatter):
             generation_config_dict = {}
         generation_config_dict['temperature'] = self.temperature
         config = genai.types.GenerationConfig(**generation_config_dict)
-        response = await self.client.generate_content_async(
-            messages, generation_config=config, **kwargs
-        )
+        try:
+            response = await self.client.generate_content_async(
+                messages, generation_config=config, **kwargs
+            )
+        except ResourceExhausted as err:
+            while retry:
+                logger.warning("%s. Sleeping for 5s", str(err))
+                await asyncio.sleep(5)
+                try:
+                    response = await self.client.generate_content_async(
+                        messages, generation_config=config, **kwargs
+                    )
+                except ResourceExhausted:
+                    retry -= 1
+            raise AgentError from err
         self.last_response = response
         try:
             self._update(

@@ -457,7 +457,7 @@ class AsyncGoogleChatter(GoogleChatter):
                     )
                 except ResourceExhausted:
                     retry -= 1
-            raise AgentError from err
+            raise AgentError(str(err)) from err
         self.last_response = response
         try:
             self._update(

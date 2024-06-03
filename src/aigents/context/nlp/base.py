@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 import spacy
+from spacy.language import Language
 
 import pandas as pd
 from .errors import ProcessingError
@@ -10,7 +11,7 @@ from .errors import ProcessingError
 class BaseTextProcessor(ABC):
     def __init__(self, pipeline: str = None):
         super().__init__()
-        self.nlp = None
+        self.nlp: Language = None
         if pipeline:
             try:
                 self.nlp = spacy.load(pipeline)

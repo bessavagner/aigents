@@ -130,17 +130,40 @@ class TextProcessor(BaseTextProcessor):
         current_tokens = 0
         encoding = get_encoding(model)
 
-        for sentence in self.sequences:
-
-            encoded_text = encoding.encode(sentence + ' ')
-            if current_tokens + len(encoded_text) <= max_tokens:
-                current_chunk.append(sentence)
-                current_tokens += len(encoded_text)
+        def split_sentence_into_chunks(sentence, max_tokens):
+            encoded_sentence = encoding.encode(sentence)
+            if len(encoded_sentence) <= max_tokens:
+                return [sentence]
             else:
-                chunks.append(' '.join(current_chunk))
-                tokens.append(current_tokens)
-                current_chunk = [sentence]
-                current_tokens = len(encoded_text)
+                words = sentence.split()
+                sub_chunks = []
+                current_sub_chunk = []
+                current_sub_tokens = 0
+                for word in words:
+                    encoded_word = encoding.encode(word + ' ')
+                    if current_sub_tokens + len(encoded_word) <= max_tokens:
+                        current_sub_chunk.append(word)
+                        current_sub_tokens += len(encoded_word)
+                    else:
+                        sub_chunks.append(' '.join(current_sub_chunk))
+                        current_sub_chunk = [word]
+                        current_sub_tokens = len(encoded_word)
+                if current_sub_chunk:
+                    sub_chunks.append(' '.join(current_sub_chunk))
+                return sub_chunks
+
+        for sentence in self.sequences:
+            sentence_chunks = split_sentence_into_chunks(sentence, max_tokens)
+            for chunk in sentence_chunks:
+                encoded_chunk = encoding.encode(chunk + ' ')
+                if current_tokens + len(encoded_chunk) <= max_tokens:
+                    current_chunk.append(chunk)
+                    current_tokens += len(encoded_chunk)
+                else:
+                    chunks.append(' '.join(current_chunk))
+                    tokens.append(current_tokens)
+                    current_chunk = [chunk]
+                    current_tokens = len(encoded_chunk)
 
         if current_chunk:
             chunks.append(' '.join(current_chunk))

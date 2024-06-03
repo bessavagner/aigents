@@ -49,6 +49,7 @@ Authors: {author}
 
 CONFIG_LOG = {
     "version": 1,
+    "disable_existing_loggers": False,
     "formatters": {
         "aigents_default": {"format": "%(levelname)s: %(message)s"},
         "aigents_standard": {
@@ -90,13 +91,11 @@ CONFIG_LOG = {
             "handlers": ["aigents_client"],
             "level": "DEBUG",
             "propagate": False,
-            "disable_existing_loggers": False
         },
         "aigents": {
             "handlers": ["aigents_standard"],
             "level": "DEBUG",
             "propagate": False,
-            "disable_existing_loggers": False
         }
     }
 }

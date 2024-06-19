@@ -14,7 +14,6 @@ MODELS = (
     'gpt-4-1106-preview',
     'gpt-4-vision-preview',
     'gemini-1.0-pro',  # Google # 6
-    'gemini-1.0-pro-vision',
     'gemini-1.5-flash',
     'gemini-1.5-pro'
 )

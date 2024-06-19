@@ -26,9 +26,8 @@ MAX_TOKENS = (
     (MODELS[4], 128000),
     (MODELS[5], 128000),
     (MODELS[6], 30720),
-    (MODELS[7], 12288),
+    (MODELS[7], 1048576),
     (MODELS[8], 1048576),
-    (MODELS[9], 1048576),
 )
 
 ROLES = (  # roles for messages objects

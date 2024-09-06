@@ -7,6 +7,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Development
+desktop/
+
 # Jupyter Notebook
 .ipynb_checkpoints
 z_*.ipynb

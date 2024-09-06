@@ -390,7 +390,7 @@ class GoogleChatterMixin:
                    api_key: str = None,
                    **kwargs):
         if self.model is None:
-            self.model = MODELS[6]
+            self.model = MODELS[8]  # gemini flash 1.5
         if self.model not in MODELS[6:]:
             raise AgentError(f"Google models are: {', '.join(MODELS[6:])}")
         self.max_tokens = dict(MAX_TOKENS)[self.model]
@@ -477,10 +477,10 @@ class GoogleChatterMixin:
             None
         """
         client = self.client
-        if self.model == MODELS[6]:
+        if self.model == MODELS[8]:
             n_tokens = self.client.count_tokens(self.messages)
         else:
-            client = genai.GenerativeModel(model_name=MODELS[6])
+            client = genai.GenerativeModel(model_name=MODELS[8])
             n_tokens = client.count_tokens(self.messages)
         while n_tokens.total_tokens > self.max_tokens:
             if use_agent and len(self.messages) > 2:

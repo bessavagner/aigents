@@ -85,7 +85,7 @@ from aigents.constants import MODELS
 
 api_key = "YOUR_OPEN_AI_API_KEY"
 chatter = OpenAIChatter(setup=setup, api_key=api_key)
-chatter.change_model(MODELS[3])
+chatter.change_model(MODELS[4])  # gpt-4o-mini
 # always checked if it is the intended model
 print(chatter.model)
 ```

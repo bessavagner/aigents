@@ -262,7 +262,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
                  setup: str = None,
                  api_key: str = None,
                  temperature: float = 0.0,
-                 model=MODELS[6],
+                 model=MODELS[8],  # Gemini flash
                  **kwargs):
         """
         Initialize a Google based Chatter instance.

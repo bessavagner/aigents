@@ -1,3 +1,4 @@
+import re
 import asyncio
 import logging
 from pathlib import Path
@@ -30,6 +31,15 @@ def codes_to_str(path: str | Path,
             code += f"{comments} {name}\n{file_.read()}\n"
     
     return code
+
+def read_python(path: str, remove_docstrings = True) -> str:
+    """Remove all docstrings from a Python script."""
+
+    script = code_to_str(path)
+    docstring_pattern = r'(?s)(""".*?"""|\'\'\'.*?\'\'\')'
+    if remove_docstrings:
+        return re.sub(docstring_pattern, '', script)
+    return script
 
 def python_codes_to_str(path: str | Path, exclude: list[str] = None) -> str:
     return codes_to_str(path, exclude=exclude)

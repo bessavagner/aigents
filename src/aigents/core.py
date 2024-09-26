@@ -352,7 +352,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
                 agent=agent
             )
             return response.text
-        except ValueError:
+        except ValueError as err:
             if len(response.candidates[0].content.parts) == 0:
                 message = (
                     "Model didn't return any message. "

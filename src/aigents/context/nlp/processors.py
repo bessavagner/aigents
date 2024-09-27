@@ -384,7 +384,7 @@ class TextProcessor(BaseTextProcessor):
 
 
 def naive_split(
-    text: str, minimal_length: int = 50
+    text: str, minimal_length: int = 50, separator: str = '. ',
 ) -> list[str]:
     """
     Split a text into sentences.
@@ -397,7 +397,7 @@ def naive_split(
     list[str]: A list of sentences.
     """
     sentences = []
-    for sentence in text.split(". "):
+    for sentence in text.split(separator):
         if len(sentence) > minimal_length:
             sentences.append(sentence)
     return sentences
@@ -406,7 +406,9 @@ def naive_token_splitter(
     text: str,
     model: str = MODELS[0],
     max_tokens: int = 500,
-    minimal_length: int = 50
+    minimal_length: int = 50,
+    separator: str = '. ',
+    simple_split: bool = False,
 ):
     """
     Split a text into tokens.
@@ -422,7 +424,7 @@ def naive_token_splitter(
     """
     encoding = get_encoding(model)
 
-    sentences = naive_split(text, minimal_length=minimal_length)
+    sentences = naive_split(text, minimal_length=minimal_length, separator=separator)
     n_tokens = [
         len(encoding.encode(" " + sentence)) for sentence in sentences
     ]
@@ -435,6 +437,11 @@ def naive_token_splitter(
     # if model == MODELS[1]:  # note: future models may require this to change
     if True:  # note: future models may require this to change
         for sentence, n_token in zip(sentences, n_tokens):
+            if simple_split:
+                chunks.append(sentence)
+                tokens.append(n_token)
+                continue
+
             if total_tokens + n_token > max_tokens and chunk:
                 chunks.append(". ".join(chunk) + ".")
                 tokens.append(total_tokens)
@@ -467,10 +474,15 @@ def naive_text_to_embeddings(
         max_tokens: int = 500,
         api_key=None,
         organization=None,
+        separator: str = '. ',
+        minimal_length: int = 50,
+        simple_split: bool = False,
         **kwargs
 ):
     processor = TextProcessor()
-    processor.dataframe = naive_token_splitter(text, model, max_tokens)
+    processor.dataframe = naive_token_splitter(
+        text, model, max_tokens, minimal_length, separator, simple_split
+    )
     return processor.embeddings(
         model=model,
         api_key=api_key,
@@ -484,10 +496,15 @@ async def naive_text_to_embeddings_async(
         max_tokens: int = 500,
         api_key=None,
         organization=None,
+        separator: str = '. ',
+        minimal_length: int = 50,
+        simple_split: bool = False,
         **kwargs
 ):
     processor = TextProcessor()
-    processor.dataframe = naive_token_splitter(text, model, max_tokens)
+    processor.dataframe = naive_token_splitter(
+        text, model, max_tokens, minimal_length, separator, simple_split
+    )
     return await processor.async_embeddings(
         model=model,
         api_key=api_key,

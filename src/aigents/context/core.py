@@ -327,4 +327,3 @@ async def embeddings_from_dict(source: dict,
         result['reference'] = result.shape[0]*[reference]
         dataframe = pd.concat([dataframe, result], ignore_index=True)
     return dataframe
-        

@@ -1,3 +1,4 @@
+import gc
 import logging
 import asyncio
 from typing import List
@@ -505,12 +506,15 @@ async def naive_text_to_embeddings_async(
     processor.dataframe = naive_token_splitter(
         text, model, max_tokens, minimal_length, separator, simple_split
     )
-    return await processor.async_embeddings(
+    embeddings = await processor.async_embeddings(
         model=model,
         api_key=api_key,
         organization=organization,
         **kwargs
     )
+    del processor
+    gc.collect()
+    return embeddings
 
 
 def create_embeddings(text: str,

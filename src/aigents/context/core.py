@@ -81,6 +81,7 @@ class Context(BaseContext):
         self.embeddings_generator: str = None
         self.embedding_model: str = None
         self.language: str = None
+        self.context_sentences: list = []
 
     async def generate_embeddings(
             self,
@@ -246,7 +247,8 @@ class Context(BaseContext):
                                max_length: int = 1800,
                                pipeline: str = None,
                                embedding_model: str = None,
-                               prefix: str = None) -> str:
+                               prefix: str = None,
+                               **kwargs) -> str:
         results = []
         current_length = 0
         if data is None:
@@ -267,7 +269,8 @@ class Context(BaseContext):
             question,
             pipeline,
             max_tokens=max_tokens,
-            embedding_model=embedding_model
+            embedding_model=embedding_model,
+            **kwargs
         )
         question_embedding = data_question_embedding.iloc[0]['embeddings']
         self.question_embedding = question_embedding
@@ -290,6 +293,7 @@ class Context(BaseContext):
                     results.pop()
                 break
 
+        self.context_sentences = results
         context = f"{prefix} {results[0]}"
         context += "".join(
             [f"\n{prefix} {result}" for result in results[1:]]
@@ -327,3 +331,4 @@ async def embeddings_from_dict(source: dict,
         result['reference'] = result.shape[0]*[reference]
         dataframe = pd.concat([dataframe, result], ignore_index=True)
     return dataframe
+        

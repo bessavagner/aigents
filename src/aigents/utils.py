@@ -26,14 +26,15 @@ def codes_to_str(path: str | Path,
     for item in sorted(Path(path).glob(f"*{suffix}")):
         if exclude and item.name in exclude:
             continue
-        name = item.name
-        with open(item, 'r', encoding='utf-8') as file_:
-            code += f"{comments} {name}\n{file_.read()}\n"
+        if suffix == ".py":
+            code += read_python(item)
+            continue
+        code += code_to_str(item, comments=f"{comments}{{}}")
     
     return code
 
-def read_python(path: str, remove_docstrings = True) -> str:
-    """Remove all docstrings from a Python script."""
+def read_python(path: str, remove_docstrings=True) -> str:
+    """Read script and remove all docstrings from a Python script."""
 
     script = code_to_str(path)
     docstring_pattern = r'(?s)(""".*?"""|\'\'\'.*?\'\'\')'

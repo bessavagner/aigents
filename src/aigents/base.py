@@ -4,6 +4,8 @@ import logging
 from typing import Dict, List, Union
 from abc import ABC, abstractmethod
 from functools import wraps
+from pathlib import Path
+from datetime import datetime
 
 from dotenv import load_dotenv
 
@@ -78,6 +80,8 @@ class BaseChatter(ABC):
         self.last_response = None
         self.api_key = None
         self.organization = None
+        self.responses_file = None
+        self.responses_folder = None
         # ~self.client~
         # this is the main API's object for sending
         # user's queries. For example, OpenAI's client is openai.OpenAI or
@@ -170,6 +174,26 @@ class BaseChatter(ABC):
                 arguments for self.client's method for querying
                 summary message.
         """
+
+    def _save_response(self, text: str, name: str = ''):
+        if self.responses_folder is None:
+            self.responses_folder = Path(f'responses_{name}'.replace("__", "_"))
+        if self.responses_file is None:
+            self.responses_file = f"responses_{name}".replace("__", "_")
+        folder = Path(
+            f"{self.responses_folder}_"
+            f"{datetime.now().strftime('%Y-%m-%d')}"
+        )
+
+        filepath = folder / (
+            f"{self.responses_file}_"
+            f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.md"
+        )
+        if not folder.exists():
+            folder.mkdir(exist_ok=True)
+
+        with open(filepath, 'w', encoding='utf-8') as out:
+            out.write(f"{text}\n")
 
 
 class OpenAIChatterMixin:

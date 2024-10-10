@@ -80,6 +80,7 @@ class OpenAIChatter(OpenAIChatterMixin, BaseChatter):
                use_agent=True,
                conversation=True,
                agent=None,
+               save: bool = False,
                **kwargs):
         """
         Generate a response to the given prompt.
@@ -135,7 +136,8 @@ class OpenAIChatter(OpenAIChatterMixin, BaseChatter):
             use_agent=use_agent,
             agent=agent
         )
-
+        if save:
+            self._save_response(response_content)
         return response_content
 
 
@@ -195,6 +197,7 @@ class AsyncOpenAIChatter(OpenAIChatterMixin, BaseChatter):
                      use_agent=True,
                      conversation=True,
                      agent=None,
+                     save: bool = False,
                      **kwargs):
         """
         Generate a response to the given prompt.
@@ -252,6 +255,8 @@ class AsyncOpenAIChatter(OpenAIChatterMixin, BaseChatter):
             use_agent=use_agent,
             agent=agent
         )
+        if save:
+            self._save_response(response_content)
 
         return response_content
 
@@ -307,6 +312,7 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
                conversation=True,
                agent=None,
                retry=2,
+               save: bool = False,
                **kwargs):
         if use_agent and agent is None:
             setup = (
@@ -368,6 +374,8 @@ class GoogleChatter(GoogleChatterMixin, BaseChatter):
                 use_agent=use_agent,
                 agent=agent
             )
+            if save:
+                self._save_response(text)
             return text
 
 
@@ -421,6 +429,7 @@ class AsyncGoogleChatter(GoogleChatter):
                      agent: str = None,
                      generation_config_dict: dict = None,
                      retry: int = 2,
+                     save: bool = False,
                      **kwargs):
         if use_agent and agent is None:
             setup = (
@@ -480,6 +489,8 @@ class AsyncGoogleChatter(GoogleChatter):
                 use_agent=use_agent,
                 agent=agent
             )
+            if save:
+                self._save_response(text)
             return text
 
 

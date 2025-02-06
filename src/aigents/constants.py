@@ -16,7 +16,7 @@ MODELS = (
     'gpt-4-vision-preview',
     'gemini-1.5-pro',  # Google # 7
     'gemini-1.5-flash',
-    'gemini-1.5-pro'
+    'gemini-1.5-flash-8b'
 )
 
 MAX_TOKENS = (
@@ -27,7 +27,7 @@ MAX_TOKENS = (
     (MODELS[4], 128000),
     (MODELS[5], 128000),
     (MODELS[6], 128000),
-    (MODELS[7], 30720),
+    (MODELS[7], 2097152),
     (MODELS[8], 1048576),
     (MODELS[9], 1048576),
 )

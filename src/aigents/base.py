@@ -415,7 +415,7 @@ class GoogleChatterMixin:
                    **kwargs):
         if self.model is None:
             self.model = MODELS[8]  # gemini flash 1.5
-        if self.model not in MODELS[6:]:
+        if self.model not in MODELS[7:]:
             raise AgentError(f"Google models are: {', '.join(MODELS[6:])}")
         self.max_tokens = dict(MAX_TOKENS)[self.model]
         self.__load_credentials(api_key=api_key)

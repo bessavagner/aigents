@@ -16,7 +16,9 @@ MODELS = (
     'gpt-4-vision-preview',
     'gemini-1.5-pro',  # Google # 7
     'gemini-1.5-flash',
-    'gemini-1.5-flash-8b'
+    'gemini-1.5-flash-8b',
+    'deepseek-chat',
+    'deepseek-reasoner'
 )
 
 MAX_TOKENS = (
@@ -30,6 +32,8 @@ MAX_TOKENS = (
     (MODELS[7], 2097152),
     (MODELS[8], 1048576),
     (MODELS[9], 1048576),
+    (MODELS[10], 64000),
+    (MODELS[11], 64000),
 )
 
 ROLES = (  # roles for messages objects

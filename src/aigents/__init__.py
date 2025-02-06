@@ -4,6 +4,7 @@ from logging.config import dictConfig
 
 from .core import OpenAIChatter
 from .core import AsyncOpenAIChatter
+from .core import DeepSeekChatter
 from .core import GoogleChatter
 from .core import AsyncGoogleChatter
 from .core import AsyncGoogleVision

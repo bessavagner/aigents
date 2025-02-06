@@ -1,3 +1,4 @@
+import os
 import time
 import logging
 import asyncio
@@ -20,6 +21,7 @@ from .utils import LastResponse
 from .errors import AgentError
 from .constants import MODELS, ROLES
 from .settings import DEBUG
+from .errors import AgentError, AgentRuntimeError
 
 logger = logging.getLogger('aigents')
 
@@ -260,6 +262,30 @@ class AsyncOpenAIChatter(OpenAIChatterMixin, BaseChatter):
 
         return response_content
 
+
+class DeepSeekChatter(OpenAIChatter):
+    def __init__(self, api_key: str = None, setup: str = None, temperature=0.0, model=MODELS[10], **kwargs):
+
+        super().__init__(
+            setup=setup,
+            api_key=api_key,
+            temperature=temperature,
+            model=model,
+            base_url="https://api.deepseek.com",
+            **kwargs
+        )
+
+    def _load_credentials(self, api_key: str, organization: str = None):
+
+        self.api_key = api_key or os.getenv("DEEPSEEK_API_KEY")
+
+        if not self.api_key:
+            load_dotenv()
+            self.api_key = os.getenv("OPENAI_API_KEY")
+            if not self.api_key:
+                raise AgentRuntimeError(
+                    "Environment variable DEEPSEEK_API_KEY not set"
+                )
 
 class GoogleChatter(GoogleChatterMixin, BaseChatter):
     def __init__(self,

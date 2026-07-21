@@ -264,7 +264,7 @@ class AsyncOpenAIChatter(OpenAIChatterMixin, BaseChatter):
 
 
 class DeepSeekChatter(OpenAIChatter):
-    def __init__(self, api_key: str = None, setup: str = None, temperature=0.0, model=MODELS[10], **kwargs):
+    def __init__(self, api_key: str = None, setup: str = None, temperature=0.0, model=MODELS[12], **kwargs):
 
         super().__init__(
             setup=setup,
